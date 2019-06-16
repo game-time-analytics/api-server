@@ -3,8 +3,8 @@
 const express = require('express');
 const newRouter = express.Router();
 
-const User = require('./users-model');
-const auth = require('./middleware');
+const User = require('../auth/users-model');
+const auth = require('../auth/middleware');
 
 newRouter.get('/public-stuff', (req, res, next) => {
   res.status(200).send('In the public stuff route');

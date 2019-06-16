@@ -4,9 +4,10 @@ const express = require('express');
 const authRouter = express.Router();
 const newRouter = express.Router();
 
-const User = require('./users-model.js');
-const auth = require('./middleware.js');
-const oauth = require('./oauth/google.js');
+const User = require('../auth/users-model');
+const Role = require('../auth/roles-model');
+const auth = require('../auth/middleware');
+const oauth = require('../auth/oauth/google');
 
 authRouter.post('/role', (req, res, next) => {
   let role = new Role(req.body);

@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('./users-model.js');
+const User = require('../auth/users-model');
 
 module.exports = (capability) => {
   
@@ -10,13 +10,13 @@ module.exports = (capability) => {
       let [authType, authString] = req.headers.authorization.split(/\s+/);
 
       switch (authType.toLowerCase()) {
-        case 'basic':
-          console.log(authString);
-          return _authBasic(authString);
-        case 'bearer':
-          return _authBearer(authString);
-        default:
-          return _authError();
+      case 'basic':
+        console.log(authString);
+        return _authBasic(authString);
+      case 'bearer':
+        return _authBearer(authString);
+      default:
+        return _authError();
       }
     } catch (e) {
       _authError();

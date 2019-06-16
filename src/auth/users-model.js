@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('./roles-model.js');
+require('../auth/roles-model');
 
 const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
 const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
@@ -33,7 +33,7 @@ users.virtual('acl', { // name of joined document; setting up the
 
 users.methods.can = function(capability){
   return capabilities[this.role].includes(capability);
-}
+};
 
 users.pre('findOne', function(){
   try{

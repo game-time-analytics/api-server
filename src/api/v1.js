@@ -11,6 +11,8 @@ const cwd = process.cwd();
 const express = require('express');
 
 const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
+const auth = require(`${cwd}/src/auth/middleware.js`);
+
 
 const router = express.Router();
 
@@ -20,11 +22,12 @@ router.param('model', modelFinder);
 
 // API Routes
 router.get('/api/v1/:model', handleGetAll);
-router.post('/api/v1/:model', handlePost);
+router.post('/api/v1/:model', auth('create'), handlePost);
 
 router.get('/api/v1/:model/:id', handleGetOne);
-router.put('/api/v1/:model/:id', handlePut);
-router.delete('/api/v1/:model/:id', handleDelete);
+router.put('/api/v1/:model/:id', auth('update'), handlePut);
+router.patch('/api/v1/:model/:id', auth('update'), handlePut);
+router.delete('/api/v1/:model/:id', auth('delete'), handleDelete);
 
 // Route Handlers
 

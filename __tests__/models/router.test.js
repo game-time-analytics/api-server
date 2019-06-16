@@ -18,7 +18,7 @@ let users = {
 
 beforeAll(async (done) => {
   await supergoose.startDB();
-  done()
+  done();
 });
 
 
