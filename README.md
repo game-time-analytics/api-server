@@ -3,12 +3,14 @@
 ## Project Name
 Block 3 Project: API Server
 
+[![Build Status](https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15.svg?branch=dev)](https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15)
+
 ### Author: Tia Rose
 
 ### Links and Resources
-* [submission PR](http://xyz.com)
-* [travis](http://xyz.com)
-* [back-end](http://xyz.com) (when applicable)
+* [submission PR](https://github.com/tia-rose-401-advanced-javascript/lab-15/pull/1)
+* [travis](https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15)
+* [back-end](https://frozen-thicket-57903.herokuapp.com/ ) (when applicable)
 
 
 #### Documentation
@@ -44,4 +46,4 @@ Usage Notes or examples
 * What assertions need to be / should be made?
 
 #### UML
-Link to an image of the UML for your application and response to events
+![UML Diagram](./assets/UML-15.JPG)
