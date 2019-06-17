@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('../auth/roles-model');
+require('./roles-model.js');
 
 const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
 const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
@@ -11,38 +11,35 @@ const SECRET = process.env.SECRET || 'foobar';
 
 const usedTokens = new Set();
 
+
 const users = new mongoose.Schema({
   username: {type:String, required:true, unique:true},
   password: {type:String, required:true},
   email: {type: String},
   role: {type: String, default:'user', enum: ['admin','editor','user']},
-}, { toObject:{virtuals:true}, toJSON:{virtuals:true} }); //mongoose needs it; makes it into an object and into JSON
+}, {toObject:{virtuals:true}, toJSON:{virtuals:true}} );
+
+users.virtual('acl', {
+  ref: 'roles',
+  localField: 'role',
+  foreignField: 'role',
+  justOne: true,
+});
+
+users.pre('findOne', function() {
+  try {
+    this.populate('acl');
+  }
+  catch(e) {
+    throw new Error(e.message);
+  }
+});
 
 const capabilities = {
-  admin: ['create','read','update','delete'],
+  admin: ['create','read','update','delete', 'superuser'],
   editor: ['create', 'read', 'update'],
   user: ['read'],
 };
-
-users.virtual('acl', { // name of joined document; setting up the
-  ref: 'roles', //
-  localField: 'role', // the local field in users-model
-  foreignField: 'role', // the field in roles-model
-  justOne:true,
-});
-
-users.methods.can = function(capability){
-  return capabilities[this.role].includes(capability);
-};
-
-users.pre('findOne', function(){
-  try{
-    this.populate('acl');
-  }
-  catch(e){
-    throw new Error (e.message);
-  }
-});
 
 users.pre('save', function(next) {
   bcrypt.hash(this.password, 10)
@@ -62,7 +59,9 @@ users.statics.createFromOauth = function(email) {
       if( !user ) { throw new Error('User Not Found'); }
       return user;
     })
-    .catch( error => {
+    .catch( creating => {
+      creating = 'Creatin new user';
+      console.log(creating);
       let username = email;
       let password = 'none';
       return this.create({username, password, email});
@@ -71,18 +70,18 @@ users.statics.createFromOauth = function(email) {
 };
 
 users.statics.authenticateToken = function(token) {
-  
+
   if ( usedTokens.has(token ) ) {
     return Promise.reject('Invalid Token');
   }
-  
+
   try {
     let parsedToken = jwt.verify(token, SECRET);
-    (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token); //if SINGLE USE Tokens is not in the .env file it is false and moves on; if it is true and the token type is not a key, put that token in the used token
+    (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token);
     let query = {_id: parsedToken.id};
     return this.findOne(query);
   } catch(e) { throw new Error('Invalid Token'); }
-  
+
 };
 
 users.statics.authenticateBasic = function(auth) {
@@ -98,23 +97,23 @@ users.methods.comparePassword = function(password) {
 };
 
 users.methods.generateToken = function(type) {
-  
+
   let token = {
     id: this._id,
-    capabilities: this.acl.capabilities,
+    capabilities: capabilities[this.role],
     type: type || 'user',
   };
-  
+
   let options = {};
-  if ( type !== 'key' && !! TOKEN_EXPIRE ) { 
+  if ( type !== 'key' && !! TOKEN_EXPIRE ) {
     options = { expiresIn: TOKEN_EXPIRE };
   }
-  
+
   return jwt.sign(token, SECRET, options);
 };
 
 users.methods.can = function(capability) {
-  return this.acl.capabilities.includes(capability);
+  return capabilities[this.role].includes(capability);
 };
 
 users.methods.generateKey = function() {
