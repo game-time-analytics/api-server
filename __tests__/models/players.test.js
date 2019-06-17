@@ -3,7 +3,7 @@
 const rootDir = process.cwd();
 const players = require(`${rootDir}/src/models/players/players-model.js`);
 
-const supergoose = require('../supergoose.js');
+const supergoose = require('./supergoose.js');
 
 beforeAll(supergoose.startDB);
 afterAll(supergoose.stopDB);

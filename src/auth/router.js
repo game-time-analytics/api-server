@@ -30,7 +30,7 @@ authRouter.post('/role', (req, res, next) => {
 /**
  * @method POST /{model}/
  * @returns {Object} 500 - Server error
- * @returns {Object 200} - { count: 2, [{}, {}] }
+ * @returns {Object} 200 - { count: 2, [{}, {}] }
  * @desc signed up a new user
  */
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: src/app</title>
+    <title>JSDoc: Source: auth/mwModularized/authBearer.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,132 +17,44 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: src/app</h1>
+    <h1 class="page-title">Source: auth/mwModularized/authBearer.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">API Server Module</div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line3">line 3</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const User = require('../users-model');
+const _authenticate = require('../mwModularized/auth');
+const _authError = require('../mwModularized/authError');
+
+/**
+ * 
+ * @param {object} authString 
+ * @param {object} capability
+ * @desc  Authenticates a user via token and moves to the authenticate helper function
+ */
+
+module.exports = (authString, capability) => {
+  return User.authenticateToken(authString)
+    .then(user => _authenticate(user, capability))
+    .catch(_authError);
+};
+
+
+// function _authBearer(authString, capability) {
+//   return User.authenticateToken(authString)
+//     .then(user => _authenticate(user))
+//     .catch(_authError);
+// }
+
+// module.exports = _authBearer;</code></pre>
+        </article>
+    </section>
 
 
 

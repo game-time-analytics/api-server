@@ -9,11 +9,11 @@ Block 3 Project: API Server
 * [submission PR](http://xyz.com)
 * [travis](http://xyz.com)
 * [back-end](http://xyz.com) (when applicable)
-* [front-end](http://xyz.com) (when applicable)
+
 
 #### Documentation
 * [api docs](http://xyz.com) (API servers)
-* [jsdoc](http://xyz.com) (Server assignments)
+* [jsdoc](file:///Users/T.T/apprenti_devstation/bend-401/lab-15/docs/index.html) (Server assignments)
 * [styleguide](http://xyz.com) (React assignments)
 
 ### Modules
