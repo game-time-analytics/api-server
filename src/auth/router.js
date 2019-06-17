@@ -22,6 +22,7 @@ authRouter.post('/role', (req, res, next) => {
 
 
 authRouter.post('/signup', (req, res, next) => {
+  console.log('In the signup route');
   let user = new User(req.body);
   user.save()
     .then( (user) => {
@@ -35,6 +36,7 @@ authRouter.post('/signup', (req, res, next) => {
 });
 
 authRouter.get('/signin', auth(), (req, res, next) => {
+  console.log('In the signin route');
   res.cookie('auth', req.token);
   res.send(req.token);
 });

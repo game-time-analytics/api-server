@@ -10,7 +10,8 @@ const cwd = process.cwd();
 
 const express = require('express');
 
-const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
+// const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
+const modelFinder = require('../middleware/model-finder');
 const auth = require(`${cwd}/src/auth/middleware.js`);
 
 
