@@ -11,10 +11,17 @@ const _authError = require('../mwModularized/authError');
  * @desc  Authenticates a user via token and moves to the authenticate helper function
  */
 
-function _authBearer(authString, capability) {
+module.exports = (authString, capability) => {
   return User.authenticateToken(authString)
-    .then(user => _authenticate(user))
+    .then(user => _authenticate(user, capability))
     .catch(_authError);
-}
+};
 
-module.exports = _authBearer;
+
+// function _authBearer(authString, capability) {
+//   return User.authenticateToken(authString)
+//     .then(user => _authenticate(user))
+//     .catch(_authError);
+// }
+
+// module.exports = _authBearer;

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 'use strict';
 
 const _authError = require('./authError');
