@@ -2,7 +2,7 @@
 
 let utils = module.exports = {};
 
-const User = require('./users-model.js');
+const User = require('../users-model');
 
 /**
    * @param {object} req - request
