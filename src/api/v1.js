@@ -99,6 +99,7 @@ router.delete('/api/v1/:model/:id', auth('delete'), handleDelete);
  * @returns {Object} 200 - { count: 2, resultts: [{}, {}]}
  */
 
+ 
 function handleGetAll(request,response,next) {
   request.model.get()
     .then( data => {
