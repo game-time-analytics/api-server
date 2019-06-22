@@ -10,7 +10,7 @@ Block 3 Project: API Server
 ### Links and Resources
 * [submission PR](https://github.com/tia-rose-401-advanced-javascript/lab-15/pull/1)
 * [travis](https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15)
-* [back-end](https://frozen-thicket-57903.herokuapp.com/ ) (when applicable)
+* [back-end](https://frozen-thicket-57903.herokuapp.com/)
 
 
 #### Documentation

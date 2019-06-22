@@ -5,7 +5,7 @@ const authRouter = express.Router();
 
 const User = require('./users-model.js');
 const auth = require('./middleware.js');
-const oauth = require('./oauth/google.js');
+const oauth = require('../auth//oauth/google');
 
 
 authRouter.post('/signup', (req, res, next) => {
