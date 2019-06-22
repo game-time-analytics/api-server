@@ -35,6 +35,7 @@ Usage Notes or examples
 
 #### Running the app
 * `npm start`
+* Use Lab 13 www auth file
 * Endpoint: `/foo/bar/`
   * Returns a JSON object with abc in it.
 * Endpoint: `/bing/zing/`

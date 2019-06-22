@@ -2,7 +2,6 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-// require('swaggerDefinition', )
 
 const mongooseOptions = {
   useNewUrlParser:true,

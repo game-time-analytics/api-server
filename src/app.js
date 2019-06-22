@@ -13,11 +13,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 // Esoteric Resources
-const notFound = require( `${cwd}/src/middleware/404.js` );
-const authRouter = require('../src/auth/router');
-// const authRouter = require( `${cwd}/auth/router.js` );
-const v1Router = require( `${cwd}/src/api/v1.js` );
 const errorHandler = require( `${cwd}/src/middleware/500.js`);
+const notFound = require( `${cwd}/src/middleware/404.js` );
+const v1Router = require( `${cwd}/src/api/v1.js` );
+const authRouter = require(`${cwd}/src/auth/router.js`);
+const aclRouter = require(`${cwd}/src/auth/role-router.js`);
 
 // Prepare the express app
 const app = express();
@@ -26,29 +26,36 @@ const app = express();
 app.use(cors());
 app.use(morgan('dev'));
 
-
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use('./docs',express.static('docs'));
 
-//Documentation
-const options = require('../docs/config/swagger');
-const expressSwagger = require('express-swagger-generator')(app);
-expressSwagger(options);
+app.use(express.static('docs'));
+// const options = require('../docs/config/swagger');
+// const expressSwagger = require('express-swagger-generator')(app);
+// expressSwagger(options);
+
 
 // Routes
-app.use(authRouter);
 app.use(v1Router);
+
+// Auth Routes
+app.use(authRouter);
+
+// Create Roles route
+app.use(aclRouter);
 
 // Catchalls
 app.use(notFound);
 app.use(errorHandler);
 
-
+/**
+ * @type {Object}
+ * @param {*} port
+ */
 let start = (port = process.env.PORT) => {
   app.listen(port, () => {
     console.log(`Server Up on ${port}`);
   });
 };
-  
+
 module.exports = {app,start};
