@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/memory-model.js</title>
+    <title>JSDoc: Source: auth/middleware.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/memory-model.js</h1>
+    <h1 class="page-title">Source: auth/middleware.js</h1>
 
     
 
@@ -28,109 +28,42 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const uuid = require('uuid/v4');
-
 /**
- * @Class Memory Model
- * @desc generic memory class model for sanitize, count, get, post, put, and delete requests to database 
+ * middleware Module
+ * @module src/auth/middleware
  */
-class Model {
 
+
+module.exports = (capability) => {
+  
   /**
-   * @constructor
-   * @param {object} schema
-   * @desc class that creates the general schema and an empty database 
+   * @param {object} req - request object
+   * @param {object} res - response object
+   * @param {object} next - next function
+   * @desc contains all middleware
    */
+  const utils = require('../auth/mwModularized/utils');
+  return (req, res, next) => {
 
-  constructor(schema) {
-    this.schema = schema;
-    this.database = [];
-  }
-
-  /**
-   * @method sanitize
-   * @param {object} entry - entry to be sanitized
-   * @desc sanitizes entry
-   */
-
-  sanitize(entry) {
-
-    let valid = true;
-    let record = {};
-
-    Object.keys(this.schema).forEach( field => {
-      if ( this.schema[field].required ) {
-        if (entry[field]) {
-          record[field] = entry[field];
-        } else {
-          valid = false;
-        }
-      }
-      else {
-        record[field] = entry[field];
-      }
-    });
     
-    return valid ? record : undefined;
-  }
-  
+    try {
+      let [authType, authString] = req.headers.authorization.split(/\s+/);
+      
+      switch (authType.toLowerCase()) {
+      case 'basic':
+        return utils._authBasic(req, authString, capability, next);
+      case 'bearer':
+        return utils._authBearer(req, authString, capability, next);
+      default:
+        return utils._authError(next);
+      }
+    } catch (e) {
+      utils._authError(next);
+    }
+  };
+};
 
-  /**
-   * @method count
-   * @desc keeps track of entries in database
-   */
-  count() {
-    return this.database.length;
-  }
-
-  /**
-   * @method get
-   * @param {string} id 
-   * @desc gets all records or one record from database
-   */
-  get(id) {
-    const records = id ? this.database.filter( (record) => record._id === id ) : this.database;
-    return Promise.resolve(records);
-  }
-
-  /**
-   * @method post
-   * @param {string} entry
-   * @desc adds an item to the database 
-   */
-  post(entry) {
-    entry._id = uuid();
-    let record = this.sanitize(entry);
-    if ( record._id ) { this.database.push(record); }
-    return Promise.resolve(record);
-  }
-
-  /**
-   * @method delete
-   * @param {string} id 
-   * @desc deletes an item from the database
-   */
-
-  delete(id) {
-    this.database = this.database.filter((record) => record._id !== id );
-    return this.get(id);
-  }
-
-  /**
-   * @method put
-   * @param {string} id 
-   * @param {string} entry - entry to be updated
-   * @desc updates an item in database
-   */
-  put(id, entry) {
-    let record = this.sanitize(entry);
-    if( record._id ) { this.database = this.database.map((item) => (item._id === id) ? record : item  ); }
-    return this.get(id);
-  }
-  
-}
-
-module.exports = Model;</code></pre>
+</code></pre>
         </article>
     </section>
 

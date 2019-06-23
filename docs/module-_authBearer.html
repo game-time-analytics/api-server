@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/memory-model.js</title>
+    <title>JSDoc: Module: _authBearer()</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,122 +17,227 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/memory-model.js</h1>
+    <h1 class="page-title">Module: _authBearer()</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
-
-const uuid = require('uuid/v4');
-
-/**
- * @Class Memory Model
- * @desc generic memory class model for sanitize, count, get, post, put, and delete requests to database 
- */
-class Model {
-
-  /**
-   * @constructor
-   * @param {object} schema
-   * @desc class that creates the general schema and an empty database 
-   */
-
-  constructor(schema) {
-    this.schema = schema;
-    this.database = [];
-  }
-
-  /**
-   * @method sanitize
-   * @param {object} entry - entry to be sanitized
-   * @desc sanitizes entry
-   */
-
-  sanitize(entry) {
-
-    let valid = true;
-    let record = {};
-
-    Object.keys(this.schema).forEach( field => {
-      if ( this.schema[field].required ) {
-        if (entry[field]) {
-          record[field] = entry[field];
-        } else {
-          valid = false;
-        }
-      }
-      else {
-        record[field] = entry[field];
-      }
-    });
+        
+            
+        
     
-    return valid ? record : undefined;
-  }
-  
+</header>
 
-  /**
-   * @method count
-   * @desc keeps track of entries in database
-   */
-  count() {
-    return this.database.length;
-  }
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Handles authenticating a user and moves onto next middleware or returns and error</div>
+        
 
-  /**
-   * @method get
-   * @param {string} id 
-   * @desc gets all records or one record from database
-   */
-  get(id) {
-    const records = id ? this.database.filter( (record) => record._id === id ) : this.database;
-    return Promise.resolve(records);
-  }
+        
+            
 
-  /**
-   * @method post
-   * @param {string} entry
-   * @desc adds an item to the database 
-   */
-  post(entry) {
-    entry._id = uuid();
-    let record = this.sanitize(entry);
-    if ( record._id ) { this.database.push(record); }
-    return Promise.resolve(record);
-  }
 
-  /**
-   * @method delete
-   * @param {string} id 
-   * @desc deletes an item from the database
-   */
 
-  delete(id) {
-    this.database = this.database.filter((record) => record._id !== id );
-    return this.get(id);
-  }
 
-  /**
-   * @method put
-   * @param {string} id 
-   * @param {string} entry - entry to be updated
-   * @desc updates an item in database
-   */
-  put(id, entry) {
-    let record = this.sanitize(entry);
-    if( record._id ) { this.database = this.database.map((item) => (item._id === id) ? record : item  ); }
-    return this.get(id);
-  }
-  
-}
 
-module.exports = Model;</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">request</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>authString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user object containing user credentials</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>capability</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">capabilities</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="auth_mwModularized_utils.js.html">auth/mwModularized/utils.js</a>, <a href="auth_mwModularized_utils.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

@@ -28,42 +28,45 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
+/**
+ * API Router Module
+ * @module src/auth/router
+ */
+
 const express = require('express');
 const authRouter = express.Router();
-// const newRouter = express.Router();
-
-const User = require('../auth/users-model');
-const Role = require('../auth/roles-model');
-const auth = require('../auth/middleware');
-const oauth = require('../auth/oauth/google');
+const Role = require('./roles-model.js');
+const User = require('./users-model.js');
+const auth = require('./middleware.js');
+const oauth = require('./oauth/google.js');
 
 /**
- * @method POST /{role}
+ * post route assign role
+ * @route POST /{role}
+ * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - { count: 2, [{}, {}] }
- * @desc creates new role for a user
- * 
+ * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
 authRouter.post('/role', (req, res, next) => {
-  let role = new Role(req.body);
 
+  let role = new Role(req.body);
   role.save()
     .then(result => {
-      res.status(200).send(result); //Creates a new role at /role and that role
+      res.status(200).send(result);
     })
     .catch(next);
 });
 
 /**
- * @method POST /{model}/
+ * signup user
+ * @route POST /{signup}
+ * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - { count: 2, [{}, {}] }
- * @desc signed up a new user
+ * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
 authRouter.post('/signup', (req, res, next) => {
-  console.log('In the signup route');
   let user = new User(req.body);
   user.save()
     .then( (user) => {
@@ -77,23 +80,24 @@ authRouter.post('/signup', (req, res, next) => {
 });
 
 /**
- * @method GET /{model}/
+ * signin user
+ * @route GET /{signin}
+ * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - {count: 2, [{}, {}] }
- * @desc signs in user
+ * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
 authRouter.get('/signin', auth(), (req, res, next) => {
-  console.log('In the signin route');
   res.cookie('auth', req.token);
   res.send(req.token);
 });
 
 /**
- * @method GET /{model}/
+ * oauth user
+ * @route GET /{oauth}
+ * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - {count: 2, [{}, {}] }
- * @desc authenticates user via token
+ * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
 authRouter.get('/oauth', (req,res,next) => {
@@ -105,10 +109,11 @@ authRouter.get('/oauth', (req,res,next) => {
 });
 
 /**
- * @method POST /{model}/
+ * Save key
+ * @route POST /{model}
+ * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - {count: 2, [{}, {}] }
- * @desc generates key
+ * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
 authRouter.post('/key', auth, (req,res,next) => {
@@ -116,8 +121,12 @@ authRouter.post('/key', auth, (req,res,next) => {
   res.status(200).send(key);
 });
 
-module.exports = authRouter;
-</code></pre>
+/**
+ * Export object with authrouter
+ * @type {Object}
+ */
+
+module.exports = authRouter;</code></pre>
         </article>
     </section>
 
@@ -127,13 +136,13 @@ module.exports = authRouter;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-404.html">404</a></li><li><a href="module-500.html">500</a></li><li><a href="module-model-finder.html">model-finder</a></li><li><a href="module-src_api_v1.html">src/api/v1</a></li><li><a href="module-src_app.html">src/app</a></li></ul><h3>Classes</h3><ul><li><a href="Categories.html">Categories</a></li><li><a href="Memory%2520Model.html">Memory Model</a></li><li><a href="Model.html">Model</a></li><li><a href="Mongo%2520Model.html">Mongo Model</a></li><li><a href="Players.html">Players</a></li><li><a href="Teams.html">Teams</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_authBasic">_authBasic</a></li><li><a href="global.html#_authenticate">_authenticate</a></li><li><a href="global.html#_authError">_authError</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#GET/%257Bmodel%257D/">GET /{model}/</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#POST/%257Bmodel%257D/">POST /{model}/</a></li><li><a href="global.html#POST/%257Brole%257D">POST /{role}</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#sanitize">sanitize</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-404.html">404</a></li><li><a href="module-500.html">500</a></li><li><a href="module-_authBasic.html">_authBasic()</a></li><li><a href="module-_authBearer.html">_authBearer()</a></li><li><a href="module-_authenticate.html">_authenticate()</a></li><li><a href="module-_authError.html">_authError()</a></li><li><a href="module-annoymous.html">annoymous()</a></li><li><a href="module-authenticateBasic.html">authenticateBasic()</a></li><li><a href="module-authenticateBearer.html">authenticateBearer()</a></li><li><a href="module-authenticateToken.html">authenticateToken()</a></li><li><a href="module-comparePassword.html">comparePassword()</a></li><li><a href="module-createFromOauth.html">createFromOauth()</a></li><li><a href="module-generateKey.html">generateKey()</a></li><li><a href="module-model-finder.html">model-finder</a></li><li><a href="module-src_api_v1.html">src/api/v1</a></li><li><a href="module-src_app.html">src/app</a></li><li><a href="module-src_auth_middleware.html">src/auth/middleware</a></li><li><a href="module-src_auth_router.html">src/auth/router</a></li><li><a href="module-src_auth_utils.html">src/auth/utils</a></li></ul><h3>Classes</h3><ul><li><a href="Categories.html">Categories</a></li><li><a href="Memory%2520Model.html">Memory Model</a></li><li><a href="Model.html">Model</a></li><li><a href="Mongo%2520Model.html">Mongo Model</a></li><li><a href="Players.html">Players</a></li><li><a href="Teams.html">Teams</a></li></ul><h3>Global</h3><ul><li><a href="global.html#count">count</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#sanitize">sanitize</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sun Jun 16 2019 21:21:43 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sat Jun 22 2019 22:11:47 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
