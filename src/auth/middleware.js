@@ -1,88 +1,42 @@
 'use strict';
 
-const User = require('./users-model.js');
+/**
+ * middleware Module
+ * @module src/auth/middleware
+ */
+
+/**
+ * auth export
+ * @type {Object}
+ */
+
 
 module.exports = (capability) => {
-
+  
+  /**
+   * @param {object} req - request object
+   * @param {object} res - response object
+   * @param {object} next - next function
+   * @desc contains all middleware
+   */
+  const utils = require('../auth/mwModularized/utils');
   return (req, res, next) => {
-    console.log(req.headers);
 
+    
     try {
       let [authType, authString] = req.headers.authorization.split(/\s+/);
-
+      
       switch (authType.toLowerCase()) {
       case 'basic':
-        return _authBasic(authString);
+        return utils._authBasic(req, authString, capability, next);
       case 'bearer':
-        return _authBearer(authString);
+        return utils._authBearer(req, authString, capability, next);
       default:
-        return _authError();
+        return utils._authError(next);
       }
     } catch (e) {
-      _authError();
+      utils._authError(next);
     }
-
-
-    function _authBasic(str) {
-    // str: am9objpqb2hubnk=
-      let base64Buffer = Buffer.from(str, 'base64'); // <Buffer 01 02 ...>
-      let bufferString = base64Buffer.toString(); // john:mysecret
-      let [username, password] = bufferString.split(':'); // john='john'; mysecret='mysecret']
-      let auth = {username, password}; // { username:'john', password:'mysecret' }
-
-      return User.authenticateBasic(auth)
-        .then(user => _authenticate(user))
-        .catch(_authError);
-    }
-
-    function _authBearer(authString) {
-      return User.authenticateToken(authString)
-        .then(user => _authenticate(user))
-        .catch(_authError);
-    }
-
-    function _authenticate(user) {
-      if ( user && (!capability || (user.can(capability))) ) {
-        req.user = user;
-        req.token = user.generateToken();
-        next();
-      }
-      else {
-        _authError();
-      }
-    }
-
-    function _authError() {
-      next('Invalid User ID/Password');
-    }
-
   };
-
 };
 
-
-// 'use strict';
-
-
-// module.exports = (capability) => {
-  
-//   return (req, res, next) => {
-//     const utils = require('./mwModularized/utils');
-
-//     try {
-//       let [authType, authString] = req.headers.authorization.split(/\s+/);
-
-//       switch (authType.toLowerCase()) {
-//       case 'basic':
-//         return utils._authBasic(authString, capability);
-//       case 'bearer':
-//         return utils._authBearer(authString,capability);
-//       default:
-//         return utils._authError();
-//       }
-//     } catch (e) {
-//       utils._authError();
-//     }
-//   };
-  
-// };

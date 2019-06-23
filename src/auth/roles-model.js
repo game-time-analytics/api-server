@@ -7,4 +7,5 @@ const rolesSchema = new mongoose.Schema({
   capabilities: {type: Array, required:true},
 });
 
+
 module.exports = mongoose.model('roles', rolesSchema);
