@@ -14,7 +14,7 @@ Block 3 Project: API Server
 
 #### Documentation
 * [JSDOC](https://frozen-thicket-57903.herokuapp.com)
-* [Swagger](https://pacific-ocean-29112.herokuapp.com/api-docs)
+* [Swagger](https://frozen-thicket-57903.herokuapp.com/api-docs)
 
 #### Modules
 * `index.js`
