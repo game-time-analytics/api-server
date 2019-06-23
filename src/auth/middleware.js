@@ -5,11 +5,6 @@
  * @module src/auth/middleware
  */
 
-/**
- * auth export
- * @type {Object}
- */
-
 
 module.exports = (capability) => {
   
