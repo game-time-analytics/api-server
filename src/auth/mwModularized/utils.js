@@ -6,22 +6,18 @@
  */
 
 
-/**
- * utils export
- * @type {Object}
- */
-
-
 let utils = module.exports = {};
 
 const User = require('../users-model');
 
 /**
-   * @param {object} req - request
-   * @param {object} authString - user object containing user credentials
-   * @param {object} capability - capabilities
-   * @desc Handles authenticating a user and moves onto next middleware or returns and error
-   */
+ * @module _authBearer()
+ * @param {object} req - request
+ * @param {object} authString - user object containing user credentials
+ * @param {object} capability - capabilities
+ * @desc Handles authenticating a user and moves onto next middleware or returns and error
+ * 
+ */
 
 
 utils._authBearer = function(req, authString, capability, next) {
@@ -31,8 +27,9 @@ utils._authBearer = function(req, authString, capability, next) {
 };
 
 /**
+ * @module _authBasic()
  * @param {object} req - request
- * @param {object} str - string
+ * @param {string} str - string
  * @param {object} capability - capability
  * @desc Handles creating auth information and calls User.authenticateBasic and handles the return
  */
@@ -48,12 +45,14 @@ utils._authBasic = function(req, str, capability, next) {
     .catch(() => utils._authError(next));
 };
 
+
 /**
+ * @module _authenticate()
  * @param {object} req - request
-   * @param {object} user - user object containing user credentials
-   * @param {object} capability - capability
-   * @desc Handles authenticating a user and moves onto next middleware or returns and error
-   */
+ * @param {object} user - user object containing user credentials
+ * @param {object} capability - capability
+ * @desc Handles authenticating a user and moves onto next middleware or returns and error
+ */
 
 utils._authenticate = function(req, user, capability, next) {
 
@@ -68,9 +67,11 @@ utils._authenticate = function(req, user, capability, next) {
 };
 
 /**
-   * @param {object} next - next function
-   * @desc Handles all auth errors
-   */
+ * @module _authError()
+ * @param {object} next - next function
+ * @desc Handles all auth errors
+ */
+
 
 utils._authError = function(next) {
   next('Invalid User ID/Password');

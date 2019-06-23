@@ -53,7 +53,7 @@ users.pre('save', function(next) {
 
 
 /**
- * @method createFromOauth()
+ * @module createFromOauth()
  * @param {object} googleUser
  * @desc created from the authorized function located in the oauth diretory. Allows google users to sign in with their accounts and then creates that user in the database
  */
@@ -76,7 +76,7 @@ users.statics.createFromOauth = function(googleUser) {
 };
 
 /**
- * @method authenticateToken()
+ * @module authenticateToken()
  * @param {object} token
  * @desc Checks to see if a user has a vaild token
  */
@@ -97,7 +97,7 @@ users.statics.authenticateToken = function(token) {
 };
 
 /**
- * @method authenticateBasic()
+ * @module authenticateBasic()
  * @param {object}
  * @desc checks to see if the credientials the user put in correct and in db
  */
@@ -111,7 +111,7 @@ users.statics.authenticateBasic = function(auth) {
 
 
 /**
- * @method authenticateBearer()
+ * @module authenticateBearer()
  * @param {object}1
  * @desc checks to see if the current token is valid, unique, non-expired token
  */
@@ -131,23 +131,23 @@ users.statics.authenticateBearer = function(token){
 };
 
 /**
- * @method comparePassword()
+ * @module comparePassword()
  * @param {object} password
- * @desc Uses the bcrypt method and compares it to the password that was provided to ensure they match
+ * @desc Uses the bcrypt module and compares it to the password that was provided to ensure they match
  */
 
-users.methods.comparePassword = function(password) {
+users.modules.comparePassword = function(password) {
   return bcrypt.compare( password, this.password )
     .then( valid => valid ? this : null);
 };
 
 /**
- * @method generateKey()
+ * @module generateKey()
  * @param {object} type
  * @desc generates a token based on that users specified capabilities
  */
 
-users.methods.generateToken = function(type) {
+users.modules.generateToken = function(type) {
   let token = {
     id: this._id,
     capabilities: capabilities[this.role],
@@ -162,20 +162,20 @@ users.methods.generateToken = function(type) {
 
 
 /**
- * @method annoymous()
+ * @module annoymous()
  * @param {object} capability
  * @desc checks to see if the capabilities passed through is allowed
  */
-users.methods.can = function(capability) {
+users.modules.can = function(capability) {
   return capabilities[this.role].includes(capability);
 };
 
 /**
- * @method generateKey()
+ * @module generateKey()
  * @desc generates a key (a token that doesn't expire)
  */
 
-users.methods.generateKey = function() {
+users.modules.generateKey = function() {
   return this.generateToken('key');
 };
 
