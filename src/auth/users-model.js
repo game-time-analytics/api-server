@@ -136,7 +136,7 @@ users.statics.authenticateBearer = function(token){
  * @desc Uses the bcrypt module and compares it to the password that was provided to ensure they match
  */
 
-users.modules.comparePassword = function(password) {
+users.methods.comparePassword = function(password) {
   return bcrypt.compare( password, this.password )
     .then( valid => valid ? this : null);
 };
@@ -147,7 +147,7 @@ users.modules.comparePassword = function(password) {
  * @desc generates a token based on that users specified capabilities
  */
 
-users.modules.generateToken = function(type) {
+users.methods.generateToken = function(type) {
   let token = {
     id: this._id,
     capabilities: capabilities[this.role],
@@ -166,7 +166,7 @@ users.modules.generateToken = function(type) {
  * @param {object} capability
  * @desc checks to see if the capabilities passed through is allowed
  */
-users.modules.can = function(capability) {
+users.methods.can = function(capability) {
   return capabilities[this.role].includes(capability);
 };
 
@@ -175,7 +175,7 @@ users.modules.can = function(capability) {
  * @desc generates a key (a token that doesn't expire)
  */
 
-users.modules.generateKey = function() {
+users.methods.generateKey = function() {
   return this.generateToken('key');
 };
 
