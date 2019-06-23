@@ -51,6 +51,7 @@ app.use(errorHandler);
 /**
  * @type {Object}
  * @param {*} port
+ * @desc connects to port specified .env file
  */
 let start = (port = process.env.PORT) => {
   app.listen(port, () => {

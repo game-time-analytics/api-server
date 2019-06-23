@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "lint": "eslint *.js",
-    "build": "jsdoc -c ./docs/config/jsdoc.config.json . && open ./docs/index.html",
+    "build": "jsdoc -c ./docs/config/jsdoc.config.json .",
     "test": "jest --verbose",
     "test-watch": "jest --watchAll --verbose"
   },
