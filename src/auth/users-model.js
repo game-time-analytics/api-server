@@ -51,6 +51,12 @@ users.pre('save', function(next) {
     .catch(error => {throw new Error(error);});
 });
 
+
+/**
+ * @method createFromOauth()
+ * @param {object} googleUser
+ * @desc created from the authorized function located in the oauth diretory. Allows google users to sign in with their accounts and then creates that user in the database
+ */
 users.statics.createFromOauth = function(googleUser) {
 
   if(! googleUser) { return Promise.reject('Validation Error'); }
@@ -69,6 +75,11 @@ users.statics.createFromOauth = function(googleUser) {
 
 };
 
+/**
+ * @method authenticateToken()
+ * @param {object} token
+ * @desc Checks to see if a user has a vaild token
+ */
 users.statics.authenticateToken = function(token) {
   
   if ( usedTokens.has(token ) ) {
@@ -85,6 +96,12 @@ users.statics.authenticateToken = function(token) {
   
 };
 
+/**
+ * @method authenticateBasic()
+ * @param {object}
+ * @desc checks to see if the credientials the user put in correct and in db
+ */
+
 users.statics.authenticateBasic = function(auth) {
   let query = {username:auth.username};
   return this.findOne(query)
@@ -92,6 +109,12 @@ users.statics.authenticateBasic = function(auth) {
     .catch(error => {throw error;});
 };
 
+
+/**
+ * @method authenticateBearer()
+ * @param {object}1
+ * @desc checks to see if the current token is valid, unique, non-expired token
+ */
 
 users.statics.authenticateBearer = function(token){
 
@@ -107,10 +130,22 @@ users.statics.authenticateBearer = function(token){
   return this.findOne(query);
 };
 
+/**
+ * @method comparePassword()
+ * @param {object} password
+ * @desc Uses the bcrypt method and compares it to the password that was provided to ensure they match
+ */
+
 users.methods.comparePassword = function(password) {
   return bcrypt.compare( password, this.password )
     .then( valid => valid ? this : null);
 };
+
+/**
+ * @method generateKey()
+ * @param {object} type
+ * @desc generates a token based on that users specified capabilities
+ */
 
 users.methods.generateToken = function(type) {
   let token = {
@@ -125,9 +160,20 @@ users.methods.generateToken = function(type) {
   return jwt.sign(token, SECRET, options);
 };
 
+
+/**
+ * @method annoymous()
+ * @param {object} capability
+ * @desc checks to see if the capabilities passed through is allowed
+ */
 users.methods.can = function(capability) {
   return capabilities[this.role].includes(capability);
 };
+
+/**
+ * @method generateKey()
+ * @desc generates a key (a token that doesn't expire)
+ */
 
 users.methods.generateKey = function() {
   return this.generateToken('key');
