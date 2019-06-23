@@ -55,11 +55,11 @@ Block 3 Project: API Server
 * `MONGODB_URI` - mongodb://localhost:27017/<databasename>
 * `TOKEN_TIME` - 15m
 * `SINGLE_USE_TOKENS` - false
-* `API_URL` - http://localhost:3002
+* `API_URL` - http://localhost:3000
 * `GOOGLE_CLIENT_ID` - obtained from google dev console
 * `GOOGLE_CLIENT_SECRET` - obtained from google dev console
 
-* `Add Roles with capabilities to db by going to --> localhost:3002/role in postman then adding`
+* `Add Roles with capabilities to db by going to --> localhost:3000/role in postman then adding`
 
 {
 	"role": "user",
