@@ -19,57 +19,77 @@ const router = express.Router();
 router.param('model', modelFinder);
 
 
+// API Routes
+
 /**
  * Get a list of records for model provided
- * @route GET /{model}
+ * @method GET
+ * @route /{model}
  * @param {string} model.path.required - Resource model name
  * @returns {Object} 500 - Server error
  * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
+router.get('/api/v1/:model', handleGetAll);
+
 
 /**
  * Creates a list of records for model provided
- * @route POST /{model}
+ * @method POST
+ * @route /{model}
  * @param {string} model.path.required - Resource model name
  * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
  * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
+router.post('/api/v1/:model', auth('create'), handlePost);
+
 
 /**
- * Get a list of records for model id provided
- * @route GET /{model}/{id}
+ * Get a record for model id provided
+ * @method GET
+ * @route /{model}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - { count: 2, results: [{}, {}]}
+ * @returns {Object} 200 - { count: 1, results: [ {} ]}
  */
+router.get('/api/v1/:model/:id', handleGetOne);
+
 
 /**
- * Modifies of records for model provided
- * @route PUT /{model}/{id}
+ * Modifies a record for model provided
+ * @method PUT
+ * @route /{model}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - { count: 2, results: [{}, {}]}
+ * @returns {Object} 200 - { count: 1, results: [ {} ]}
  */
+
+router.put('/api/v1/:model/:id',auth('update'), handlePut);
+
+/**
+ * Modifies a record for model provided
+ * @method PATCH
+ * @route /{model}/{id}
+ * @param {string} model.path.required - Resource model name
+ * @param {number} id.path.required - Resource model name
+ * @consumes application/json application/xml
+ * @returns {Object} 500 - Server error
+ * @returns {Object} 200 - { count: 1, results: [ {} ]}
+ */
+router.patch('/api/v1/:model/:id',auth('update'), handlePut);
+
 
 /**
  * Deletes records for model provided
- * @route DELETE /{model}/{id}
+ * @method DELETE
+ * @route /{model}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @returns {Object} 500 - Server error
- * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
-
-// API Routes
-router.get('/api/v1/:model', handleGetAll);
-router.post('/api/v1/:model', auth('create'), handlePost);
-router.get('/api/v1/:model/:id', handleGetOne);
-router.put('/api/v1/:model/:id',auth('update'), handlePut);
-router.patch('/api/v1/:model/:id',auth('update'), handlePut);
 router.delete('/api/v1/:model/:id',auth('delete'), handleDelete);
 
 // Route Handlers
