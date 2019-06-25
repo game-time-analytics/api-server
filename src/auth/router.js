@@ -26,15 +26,27 @@ authRouter.param('model', modelFinder);
  * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
-authRouter.post('/role', (req, res, next) => {
 
-  let role = new Role(req.body);
-  role.save()
-    .then(result => {
-      res.status(200).send(result);
-    })
-    .catch(next);
+// To create roles visit this route once
+const capabilities = {
+  admin: ['create', 'read', 'update', 'delete', 'superuser'],
+  editor: ['create', 'read', 'update'],
+  user: ['read'],
+};
+
+authRouter.post('/role', (req, res) => {
+
+  let saves = [];
+  Object.keys(capabilities).map(role => {
+    let newRecord = new Role({role, capabilities: capabilities[role]});
+    saves.push(newRecord.save());
+  });
+
+  Promise.all(saves);
+
+  res.status(200).send('Roles created');
 });
+
 
 /**
  * signup user
