@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: auth/users-model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: auth/users-model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('./roles-model.js');
+
+const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
+const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
+const SECRET = process.env.SECRET || 'foobar';
+
+const usedTokens = new Set();
+
+const capabilities = {
+  admin: ['create','read','update','delete', 'superuser'],
+  editor: ['create', 'read', 'update'],
+  user: ['read'],
+};
+
+const users = new mongoose.Schema({
+  username: {type:String, required:true, unique:true},
+  password: {type:String, required:true},
+  email: {type: String},
+  role: {type: String, default:'user', enum: ['admin','editor','user']},
+}, { toObject:{virtuals:true}, toJSON:{virtuals:true}});
+
+users.virtual('acl', {
+  ref: 'roles',
+  localField: 'role',
+  foreignField: 'role',
+  justOne: true,
+});
+
+users.pre('findOne', function() {
+  try{
+    this.populate('acl');
+  }
+  catch(e) {
+    console.error('error', e);
+  }
+});
+
+
+
+users.pre('save', function(next) {
+  bcrypt.hash(this.password, 10)
+    .then(hashedPassword => {
+      this.password = hashedPassword;
+      next();
+    })
+    .catch(error => {throw new Error(error);});
+});
+
+
+/**
+ * @module createFromOauth()
+ * @param {object} googleUser
+ * @desc created from the authorized function located in the oauth diretory. Allows google users to sign in with their accounts and then creates that user in the database
+ */
+users.statics.createFromOauth = function(googleUser) {
+
+  if(! googleUser) { return Promise.reject('Validation Error'); }
+  let email = googleUser.email;
+  return this.findOne( {email} )
+    .then(user => {
+      if( !user ) { throw new Error('User Not Found'); }
+      return user;
+    })
+    .catch( error => {
+      let username = email;
+      let password = 'none';
+      let role = 'user';
+      return this.create({username, password, email, role});
+    });
+
+};
+
+/**
+ * @module authenticateToken()
+ * @param {object} token
+ * @desc Checks to see if a user has a vaild token
+ */
+users.statics.authenticateToken = function(token) {
+  
+  if ( usedTokens.has(token ) ) {
+    return Promise.reject('Invalid Token');
+  }
+  
+  try {
+    let parsedToken = jwt.verify(token, SECRET);
+    
+    (SINGLE_USE_TOKENS) &amp;&amp; parsedToken.type !== 'key' &amp;&amp; usedTokens.add(token);
+    let query = {_id: parsedToken.id};
+    return this.findOne(query);
+  } catch(e) { console.log('rejecteds'); throw new Error('Invalid Token'); }
+  
+};
+
+/**
+ * @module authenticateBasic()
+ * @param {object}
+ * @desc checks to see if the credientials the user put in correct and in db
+ */
+
+users.statics.authenticateBasic = function(auth) {
+  let query = {username:auth.username};
+  return this.findOne(query)
+    .then( user => user &amp;&amp; user.comparePassword(auth.password) )
+    .catch(error => {throw error;});
+};
+
+
+/**
+ * @module authenticateBearer()
+ * @param {object}1
+ * @desc checks to see if the current token is valid, unique, non-expired token
+ */
+
+users.statics.authenticateBearer = function(token){
+
+  if(usedTokens.has(token)){
+    return Promise.reject('Invalid token');
+  }
+
+  let parsedToken = jwt.verify(token, process.env.SECRET);
+
+  parsedToken.type !== 'key' &amp;&amp; usedTokens.add(token);
+
+  let query = {_id: parsedToken.id};
+  return this.findOne(query);
+};
+
+/**
+ * @module comparePassword()
+ * @param {object} password
+ * @desc Uses the bcrypt module and compares it to the password that was provided to ensure they match
+ */
+
+users.methods.comparePassword = function(password) {
+  return bcrypt.compare( password, this.password )
+    .then( valid => valid ? this : null);
+};
+
+/**
+ * @module generateKey()
+ * @param {object} type
+ * @desc generates a token based on that users specified capabilities
+ */
+
+users.methods.generateToken = function(type) {
+  let token = {
+    id: this._id,
+    capabilities: capabilities[this.role],
+    type: type || this.role || 'user',
+  };
+  let options = {};
+  if ( type !== 'key' &amp;&amp; !! TOKEN_EXPIRE ) { 
+    options = { expiresIn: TOKEN_EXPIRE };
+  }
+  return jwt.sign(token, SECRET, options);
+};
+
+
+/**
+ * @module annoymous()
+ * @param {object} capability
+ * @desc checks to see if the capabilities passed through is allowed
+ */
+users.methods.can = function(capability) {
+  return capabilities[this.role].includes(capability);
+};
+
+/**
+ * @module generateKey()
+ * @desc generates a key (a token that doesn't expire)
+ */
+
+users.methods.generateKey = function() {
+  return this.generateToken('key');
+};
+
+module.exports = mongoose.model('users', users);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-404.html">404</a></li><li><a href="module-500.html">500</a></li><li><a href="module-_authBasic.html">_authBasic()</a></li><li><a href="module-_authBearer.html">_authBearer()</a></li><li><a href="module-_authenticate.html">_authenticate()</a></li><li><a href="module-_authError.html">_authError()</a></li><li><a href="module-annoymous.html">annoymous()</a></li><li><a href="module-authenticateBasic.html">authenticateBasic()</a></li><li><a href="module-authenticateBearer.html">authenticateBearer()</a></li><li><a href="module-authenticateToken.html">authenticateToken()</a></li><li><a href="module-comparePassword.html">comparePassword()</a></li><li><a href="module-createFromOauth.html">createFromOauth()</a></li><li><a href="module-generateKey.html">generateKey()</a></li><li><a href="module-model-finder.html">model-finder</a></li><li><a href="module-src_api_v1.html">src/api/v1</a></li><li><a href="module-src_app.html">src/app</a></li><li><a href="module-src_auth_middleware.html">src/auth/middleware</a></li><li><a href="module-src_auth_router.html">src/auth/router</a></li><li><a href="module-src_auth_utils.html">src/auth/utils</a></li></ul><h3>Classes</h3><ul><li><a href="Categories.html">Categories</a></li><li><a href="Memory%2520Model.html">Memory Model</a></li><li><a href="Model.html">Model</a></li><li><a href="Mongo%2520Model.html">Mongo Model</a></li><li><a href="Players.html">Players</a></li><li><a href="Teams.html">Teams</a></li></ul><h3>Global</h3><ul><li><a href="global.html#count">count</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#sanitize">sanitize</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sat Jun 22 2019 22:11:47 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
