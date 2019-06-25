@@ -79,22 +79,7 @@ authRouter.get('/signin', auth(), (req, res, next) => {
  * @returns {Object} 500 - Server error
  * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
-authRouter.put('/update/:id', auth('update'), (req, res, next) => {
-  console.log(req.params.id);
-  console.log(req.body);
-
-  User.findByIdAndUpdate(req.params.id, req.body, {new:true})
-    .then(() => res.status(200).send('Information updated'))
-    .catch(next);
-  // User.findByIdAndUpdate(req.params.id, {
-  //   $set:{
-  //     username: req.body.username,
-  //     password: req.body.password,
-  //     email: req.body.email,
-  //     role: req.params.role,
-  //   },
-  // });
-});
+authRouter.put('/update/:id', auth('update'), handlePut);
 
 
 /**
@@ -105,7 +90,7 @@ authRouter.put('/update/:id', auth('update'), (req, res, next) => {
  * @returns {Object} 500 - Server error
  * @returns {Object} 200 - { }
  */
-authRouter.delete('/delete', auth('delete'), handleDelete);
+authRouter.delete('/delete/:id', auth('delete'), handleDelete);
 
 
 
@@ -117,10 +102,10 @@ authRouter.delete('/delete', auth('delete'), handleDelete);
    * @param {function} next - next function which calls next middleware
    * @desc Middleware that handles put route
    */
-function handlePut(request,response,next) {
-  request.model.put(request.params.id, request.body)
-    .then( result => response.status(200).json(result) )
-    .catch( next );
+function handlePut(req,res,  next) {
+  User.findByIdAndUpdate(req.params.id, req.body, {new:true})
+    .then(() => res.status(200).send('Information updated'))
+    .catch(next);
 }
   
 /**
@@ -130,10 +115,14 @@ function handlePut(request,response,next) {
      * @param {function} next - next function which calls next middleware
      * @desc Middleware that handles delete route
      */
-function handleDelete(request,response,next) {
-  request.model.delete(request.params.id)
-    .then( result => response.status(200).json(result) )
-    .catch( next );
+function handleDelete(req, res, next) {
+
+  console.log('here in delete');
+  console.log(req.params);
+  console.log(req.params.id);
+  User.findByIdAndDelete(req.params.id)
+    .then(() => res.status(200).send('Information deleted'))
+    .catch(next);
 }
   
 

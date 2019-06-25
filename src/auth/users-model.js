@@ -1,13 +1,15 @@
 'use strict';
 
+require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 require('./roles-model.js');
 
-const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
-const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME || '5m';
-const SECRET = process.env.SECRET || 'foobar';
+const SINGLE_USE_TOKENS = process.env.SINGLE_USE_TOKENS;
+const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME;
+const SECRET = process.env.SECRET;
 
 const usedTokens = new Set();
 
