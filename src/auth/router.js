@@ -12,6 +12,12 @@ const User = require('./users-model.js');
 const auth = require('./middleware.js');
 const oauth = require('./oauth/google.js');
 
+// Migth be useful for the future
+const cwd = process.cwd();
+const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
+authRouter.param('model', modelFinder);
+
+
 /**
  * post route assign role
  * @route POST /{role}
@@ -63,6 +69,79 @@ authRouter.get('/signin', auth(), (req, res, next) => {
   res.cookie('auth', req.token);
   res.send(req.token);
 });
+
+
+/**
+ * Modifies of records for model provided
+ * @route PUT /{model}/{id}
+ * @param {string} model.path.required - Resource model name
+ * @param {number} id.path.required - Resource model name
+ * @returns {Object} 500 - Server error
+ * @returns {Object} 200 - { count: 2, results: [{}, {}]}
+ */
+authRouter.put('/update/:id', auth('update'), (req, res, next) => {
+  console.log(req.params.id);
+  console.log(req.body);
+
+  User.findByIdAndUpdate(req.params.id, req.body, {new:true})
+    .then(() => res.status(200).send('Information updated'))
+    .catch(next);
+  // User.findByIdAndUpdate(req.params.id, {
+  //   $set:{
+  //     username: req.body.username,
+  //     password: req.body.password,
+  //     email: req.body.email,
+  //     role: req.params.role,
+  //   },
+  // });
+});
+
+
+/**
+ * Deletes records for model provided
+ * @route DELETE /{model}/{id}
+ * @param {string} model.path.required - Resource model name
+ * @param {number} id.path.required - Resource model name
+ * @returns {Object} 500 - Server error
+ * @returns {Object} 200 - { }
+ */
+authRouter.delete('/delete', auth('delete'), handleDelete);
+
+
+
+
+/**
+   * @function handlePut
+   * @param {object} request - request object
+   * @param {object} response - response object
+   * @param {function} next - next function which calls next middleware
+   * @desc Middleware that handles put route
+   */
+function handlePut(request,response,next) {
+  request.model.put(request.params.id, request.body)
+    .then( result => response.status(200).json(result) )
+    .catch( next );
+}
+  
+/**
+     * @function handleDelete
+     * @param {object} request - request object
+     * @param {object} response - response object
+     * @param {function} next - next function which calls next middleware
+     * @desc Middleware that handles delete route
+     */
+function handleDelete(request,response,next) {
+  request.model.delete(request.params.id)
+    .then( result => response.status(200).json(result) )
+    .catch( next );
+}
+  
+
+
+
+
+
+
 
 /**
  * oauth user
