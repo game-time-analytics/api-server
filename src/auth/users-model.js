@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 require('./roles-model.js');
 
-const SINGLE_USE_TOKENS = process.env.SINGLE_USE_TOKENS;
+const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
 const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME;
 const SECRET = process.env.SECRET;
 
@@ -90,8 +90,9 @@ users.statics.authenticateToken = function(token) {
   
   try {
     let parsedToken = jwt.verify(token, SECRET);
-    
+    console.log(SINGLE_USE_TOKENS);
     (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token);
+    console.log(usedTokens);
     let query = {_id: parsedToken.id};
     return this.findOne(query);
   } catch(e) { console.log('rejecteds'); throw new Error('Invalid Token'); }
@@ -118,19 +119,19 @@ users.statics.authenticateBasic = function(auth) {
  * @desc checks to see if the current token is valid, unique, non-expired token
  */
 
-users.statics.authenticateBearer = function(token){
+// users.statics.authenticateBearer = function(token){
 
-  if(usedTokens.has(token)){
-    return Promise.reject('Invalid token');
-  }
+//   if(usedTokens.has(token)){
+//     return Promise.reject('Invalid token');
+//   }
 
-  let parsedToken = jwt.verify(token, process.env.SECRET);
+//   let parsedToken = jwt.verify(token, process.env.SECRET);
 
-  parsedToken.type !== 'key' && usedTokens.add(token);
+//   SINGLE_USE_TOKENS && parsedToken.type !== 'key' && usedTokens.add(token);
 
-  let query = {_id: parsedToken.id};
-  return this.findOne(query);
-};
+//   let query = {_id: parsedToken.id};
+//   return this.findOne(query);
+// };
 
 /**
  * @module comparePassword()

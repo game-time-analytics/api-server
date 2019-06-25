@@ -8,6 +8,11 @@
 
 module.exports = (capability) => {
   
+  //check if caps undefines
+  if(!capability){
+    capability = 'read';
+  }
+
   /**
    * @param {object} req - request object
    * @param {object} res - response object

@@ -116,10 +116,6 @@ function handlePut(req,res,  next) {
      * @desc Middleware that handles delete route
      */
 function handleDelete(req, res, next) {
-
-  console.log('here in delete');
-  console.log(req.params);
-  console.log(req.params.id);
   User.findByIdAndDelete(req.params.id)
     .then(() => res.status(200).send('Information deleted'))
     .catch(next);
@@ -156,7 +152,7 @@ authRouter.get('/oauth', (req,res,next) => {
  * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
 
-authRouter.post('/key', auth, (req,res,next) => {
+authRouter.post('/key', auth(), (req,res,next) => {
   let key = req.user.generateKey();
   res.status(200).send(key);
 });

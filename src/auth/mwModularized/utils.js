@@ -56,13 +56,15 @@ utils._authBasic = function(req, str, capability, next) {
  */
 
 utils._authenticate = function(req, user, capability, next) {
-
+  
   if ( user && (!capability || (user.can(capability))) ) {
+
     req.user = user;
     req.token = user.generateToken();
     next();
   }
   else {
+
     utils._authError(next);
   }
 };
