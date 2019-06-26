@@ -5,10 +5,14 @@
  * @module src/auth/middleware
  */
 
-
+/**
+ * Export object for authentication module
+ * @type {Object}
+ * @desc allows use of authentication
+ */
 module.exports = (capability) => {
   
-  //check if caps undefines
+  //check if capabilities is undefined
   if(!capability){
     capability = 'read';
   }
@@ -16,13 +20,15 @@ module.exports = (capability) => {
   /**
    * @param {object} req - request object
    * @param {object} res - response object
-   * @param {object} next - next function
-   * @desc contains all middleware
+   * @param {object} capability - capablities object
+   * @param {function} next - next function which calls next middleware
+   * @return {object} authenticated user with token
+   * @desc Runs all authentication middleware functions depending on type of authorization, basic or bearer
    */
+
   const utils = require('../auth/mwModularized/utils');
   return (req, res, next) => {
 
-    
     try {
       let [authType, authString] = req.headers.authorization.split(/\s+/);
       

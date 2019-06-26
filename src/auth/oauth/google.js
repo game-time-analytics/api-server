@@ -1,7 +1,19 @@
 'use strict';
 
+/**
+ * Google Oauth Module
+ * @module src/auth/oauth/google
+ */
+
 const superagent = require('superagent');
 const Users = require('../users-model.js');
+
+/**
+ * @method authorize
+ * @param {object} req - request
+ * @desc Handles Google oauth request and execution
+ * @return {object} authenticated user from google with token
+ */
 
 const authorize = (req) => {
 
@@ -36,8 +48,12 @@ const authorize = (req) => {
       return actualRealUser.generateToken();
     })
     .catch(error => error);
-
-
 };
+
+/**
+ * Export object with oauth authorize function attached
+ * @type {Object}
+ * @desc allows use of Google Oauth
+ */
 
 module.exports = {authorize};
