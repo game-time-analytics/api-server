@@ -57,7 +57,7 @@ let start = (port = process.env.PORT) => {
 
 /**
 * Export object with app and start method attached
-* @type {object} export
+* @type {object}
 * @desc export object to start server
 */
 

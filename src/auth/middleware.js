@@ -7,7 +7,7 @@
 
 /**
  * Export object for authentication module
- * @type {Object} export
+ * @type {Object}
  * @desc allows use of authentication
  */
 module.exports = (capability) => {

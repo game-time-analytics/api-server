@@ -22,7 +22,7 @@ const rolesSchema = new mongoose.Schema({
 
 /**
  * Export object for roles schema
- * @type {Object} export
+ * @type {Object}
  * @desc allows use of roles schema
  */
 module.exports = mongoose.model('roles', rolesSchema);
