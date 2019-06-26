@@ -43,264 +43,27 @@
 
 
     <section>
-        <article><h1>LAB - 15</h1>
+        <article><h1>Express Server</h1>
 <h2>Project Name</h2>
-<p>Block 3 Project: API Server</p>
-<p><a href="https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15"><img src="https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15.svg?branch=dev" alt="Build Status"></a></p>
-<h3>Author: Tia Rose</h3>
+<p>Trip 'n' Talk Express Server</p>
+<p><a href="https://www.travis-ci.com/team-trip-n-talk/ExpressServer"><img src="https://www.travis-ci.com/team-trip-n-talk/ExpressServer.svg?branch=master" alt="Build Status"></a></p>
+<h3>Authors:</h3>
+<p>Tia Rose, Felipe Delatorre, Jeff Lawrence</p>
 <h3>Links and Resources</h3>
 <ul>
-<li><a href="https://github.com/tia-rose-401-advanced-javascript/lab-15/pull/2">submission PR</a></li>
-<li><a href="https://www.travis-ci.com/tia-rose-401-advanced-javascript/lab-15">travis</a></li>
-<li><a href="https://frozen-thicket-57903.herokuapp.com/">back-end</a></li>
+<li><a href="https://github.com/team-trip-n-talk/ExpressServer">Github</a></li>
+<li><a href="https://www.travis-ci.com/team-trip-n-talk/ExpressServer">Travis</a></li>
+<li><a href="">Heroku</a></li>
 </ul>
 <h4>Documentation</h4>
 <ul>
-<li><a href="https://frozen-thicket-57903.herokuapp.com">JSDOC</a></li>
-<li><a href="https://frozen-thicket-57903.herokuapp.com/api-docs">Swagger</a></li>
+<li><a href="">JSDOC</a></li>
+<li><a href="">Swagger</a></li>
+<li><a href="https://www.lucidchart.com/documents/edit/b4adc909-52d2-460a-9a0a-d8cfb7211ec5/0">Data Flow</a></li>
 </ul>
 <h4>Modules</h4>
 <ul>
-<li><code>index.js</code></li>
-<li><code>src folder</code></li>
-<li>
-<ul>
-<li><code>api folder</code></li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>v1.js</code> - <code>exports - router</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li><code>auth folder</code></li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>oauth folder</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>google.js</code> - <code>exports - authorize</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>middleware.js</code> - <code>exports - auth</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>roles-model.js</code> - <code>exports - rolesSchema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>router.js</code> - <code>exports - authRouter</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>users-model.js</code> - <code>exports - usersSchema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>utils.js</code> - <code>exports - utils object containing authbearer, authbasic and authenticate</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li><code>middleware folder</code></li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>404.js</code> - <code>exports - 404 error</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>500.js</code> - <code>exports - 500 error</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>model-finder.js</code> - <code>exports - modelfinder</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li><code>models folder</code></li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>categories folder</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>categories-model.js</code> - <code>exports - new categories Schema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>players folder</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>players-model.js</code> - <code>exports - new players Schema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>players-schema.js</code> - <code>exports - players Schema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>teams folder</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>teams-model.js</code> - <code>exports - new teams Schema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>teams-schema.js</code> - <code>exports - teams Schema</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>memory-model.js</code> - <code>exports - memory model class containing sanintize, count, get by id, post, delete by id and put by id and entry</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li><code>monngo-model.js</code> - <code>exports - mongo model class containing get by id, post, put by id and entry and delete by id</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li><code>app.js</code></li>
-</ul>
-</li>
+<li><a href="https://github.com/team-trip-n-talk/ExpressServer/wiki/Modules">Modules-Wiki</a></li>
 </ul>
 <h3>Setup</h3>
 <ul>
@@ -308,118 +71,16 @@
 </ul>
 <h4><code>.env</code> requirements - see sample-env or look below</h4>
 <ul>
-<li>
-<p><code>PORT</code> - 3000</p>
-</li>
-<li>
-<p><code>SECRET</code> - string</p>
-</li>
-<li>
-<p><code>MONGODB_URI</code> - mongodb://localhost:27017/<databasename></p>
-</li>
-<li>
-<p><code>TOKEN_TIME</code> - 15m</p>
-</li>
-<li>
-<p><code>SINGLE_USE_TOKENS</code> - false</p>
-</li>
-<li>
-<p><code>API_URL</code> - http://localhost:3000</p>
-</li>
-<li>
-<p><code>GOOGLE_CLIENT_ID</code> - obtained from google dev console</p>
-</li>
-<li>
-<p><code>GOOGLE_CLIENT_SECRET</code> - obtained from google dev console</p>
-</li>
-<li>
-<p><code>Add Roles with capabilities to db by going to --&gt; localhost:3000/role in postman then adding</code></p>
-</li>
+<li><a href="https://github.com/team-trip-n-talk/ExpressServer/wiki/Environment-setup-requirements">Environment-Wiki</a></li>
 </ul>
-<p>{
-&quot;role&quot;: &quot;user&quot;,
-&quot;capabilities&quot;: [&quot;read&quot;]
-}</p>
-<p>{
-&quot;role&quot;: &quot;editor&quot;,
-&quot;capabilities&quot;: [&quot;create&quot;, &quot;read&quot;, &quot;update&quot;]
-}</p>
-<p>{
-&quot;role&quot;: &quot;admin&quot;,
-&quot;capabilities&quot;: [&quot;create&quot;, &quot;read&quot;, &quot;update&quot;, &quot;delete&quot;, &quot;superuser&quot;]
-}</p>
 <h4>Running the app</h4>
 <ul>
-<li>
-<p><code>npm start</code></p>
-</li>
-<li>
-<p>Endpoint: <code>/role</code></p>
-<ul>
-<li>allows adding of roles through this route and postman</li>
-</ul>
-</li>
-<li>
-<p>Endpoint: <code>/signup</code></p>
-<ul>
-<li>route to signup a new user with a username, pwd, email and role/capabilities</li>
-</ul>
-</li>
-<li>
-<p>Endpoint: <code>/signin</code></p>
-<ul>
-<li>route to signin a user with username and pwd</li>
-</ul>
-</li>
-<li>
-<p>Endpoint: <code>/oauth</code></p>
-<ul>
-<li>route to authenticate user throug oauth using their google login info</li>
-</ul>
-</li>
-<li>
-<p>Endpoint <code>//api/v1/:model</code></p>
-<ul>
-<li>get route that gets all for either players, teams or categories</li>
-</ul>
-</li>
-<li>
-<p>Endpoint <code>/api/v1/:model</code></p>
-<ul>
-<li>post route that creates for either players, teams or categories - requires create authentication</li>
-</ul>
-</li>
-<li>
-<p>Endpoint <code>//api/v1/:model/:id</code></p>
-<ul>
-<li>get route that returns a single player, team or category based on id</li>
-</ul>
-</li>
-<li>
-<p>Endpoint <code>/api/v1/:model/:id</code></p>
-<ul>
-<li>put route that updates a single player, team or category based on id - requires update authentication</li>
-</ul>
-</li>
-<li>
-<p>Endpoint <code>/api/v1/:model/:id</code></p>
-<ul>
-<li>patch route that updates a single player, team or category based on id - requires update authentication</li>
-</ul>
-</li>
-<li>
-<p>Endpoint <code>/api/v1/:model/:id</code></p>
-<ul>
-<li>delete route that deletes a single player, team or category based on id - requires delete authentication</li>
-</ul>
-</li>
+<li><a href="https://github.com/team-trip-n-talk/ExpressServer/wiki/Running-the-app">Running-The-App-Wiki</a></li>
 </ul>
 <h4>Tests</h4>
 <ul>
 <li><code>npm test</code></li>
-</ul>
-<h4>UML</h4>
-<p><img src="./assets/UML-15.JPG" alt="UML Diagram"></p></article>
+</ul></article>
     </section>
 
 
@@ -436,7 +97,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Wed Jun 26 2019 12:25:09 GMT-0800 (GMT-08:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Wed Jun 26 2019 12:54:45 GMT-0800 (GMT-08:00)
 </footer>
 
 <script> prettyPrint(); </script>
