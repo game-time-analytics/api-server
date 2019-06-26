@@ -90,9 +90,9 @@ users.statics.authenticateToken = function(token) {
   
   try {
     let parsedToken = jwt.verify(token, SECRET);
-    console.log(SINGLE_USE_TOKENS);
+    console.log('above parse');
+    console.log(parsedToken);
     (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token);
-    console.log(usedTokens);
     let query = {_id: parsedToken.id};
     return this.findOne(query);
   } catch(e) { console.log('rejecteds'); throw new Error('Invalid Token'); }
@@ -145,13 +145,14 @@ users.methods.comparePassword = function(password) {
 };
 
 /**
- * @module generateKey()
+ * @module generateToken()
  * @param {object} type
  * @desc generates a token based on that users specified capabilities
  */
 
 users.methods.generateToken = function(type) {
   let token = {
+    username: this.username,
     id: this._id,
     capabilities: capabilities[this.role],
     type: type || this.role || 'user',
@@ -160,6 +161,7 @@ users.methods.generateToken = function(type) {
   if ( type !== 'key' && !! TOKEN_EXPIRE ) { 
     options = { expiresIn: TOKEN_EXPIRE };
   }
+  console.log(token.username);
   return jwt.sign(token, SECRET, options);
 };
 
