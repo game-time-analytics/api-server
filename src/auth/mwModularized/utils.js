@@ -16,11 +16,12 @@ let utils = module.exports = {};
 const User = require('../users-model');
 
 /**
- *   @method _authBearer
+ * @method _authBearer
  * @param {object} req - request
  * @param {object} authString - user object containing user credentials
  * @param {object} capability - capabilities
  * @param {object} next - next
+ * @return {object} authenticated user with token
  * @desc Handles authenticating a user and moves onto next middleware or returns and error
  */
 
@@ -36,6 +37,7 @@ utils._authBearer = function(req, authString, capability, next) {
  * @param {string} str - string
  * @param {object} capability - capability
  * @param {object} next - next
+ * @return {object} authenticated user object
  * @desc Handles creating auth information and calls User.authenticateBasic and handles the return
  */
 
@@ -57,6 +59,7 @@ utils._authBasic = function(req, str, capability, next) {
  * @param {object} user - user object containing user credentials
  * @param {object} capability - capability
  * @param {object} next - next
+ * @return {object} generates a token based on user capabilities
  * @desc Handles authenticating a user and moves onto next middleware or returns and error
  */
 
@@ -75,6 +78,7 @@ utils._authenticate = function(req, user, capability, next) {
  * @method _autheError
  * @param {object} next - next function
  * @desc Handles all auth errors
+ * @return {string} error message
  */
 
 utils._authError = function(next) {

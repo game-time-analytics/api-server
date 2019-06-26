@@ -12,6 +12,7 @@ const Users = require('../users-model.js');
  * @method authorize
  * @param {object} req - request
  * @desc Handles Google oauth request and execution
+ * @return {object} authenticated user from google with token
  */
 
 const authorize = (req) => {
