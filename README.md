@@ -1,4 +1,3 @@
-# Express Server
 
 ## Project Name
 Trip 'n' Talk Express Server
