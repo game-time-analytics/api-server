@@ -2,7 +2,7 @@
 
 /**
  * Utils Module
- * @module src/auth/mwModularized/utils
+ * @module src/auth/utils/index
  */
 
 /**
@@ -22,7 +22,7 @@ const User = require('../users-model');
  * @param {object} capability - capabilities
  * @param {function} next - next function which calls next middleware
  * @return {object} authenticated user with token
- * @desc Handles authenticating a user and moves onto next middleware or returns and error
+ * @desc Verifies the token matches a user and calls the function authenticate to check the user has the appropriate capabilities for the request
  */
 
 utils._authBearer = function(req, authString, capability, next) {
@@ -60,7 +60,7 @@ utils._authBasic = function(req, str, capability, next) {
  * @param {object} capability - capability
  * @param {function} next - next function which calls next middleware
  * @return {object} generates a token based on user capabilities
- * @desc Handles authenticating a user and moves onto next middleware or returns and error
+ * @desc method to verify user has appropriate capabilities and modifies the request object with a user object and a new token
  */
 
 utils._authenticate = function(req, user, capability, next) {

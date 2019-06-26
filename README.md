@@ -1,4 +1,3 @@
-# Express Server
 
 ## Project Name
 Trip 'n' Talk Express Server
@@ -11,11 +10,11 @@ Tia Rose, Felipe Delatorre, Jeff Lawrence
 ### Links and Resources
 * [Github](https://github.com/team-trip-n-talk/ExpressServer)
 * [Travis](https://www.travis-ci.com/team-trip-n-talk/ExpressServer)
-* [Heroku]()
+* [Heroku](https://trip-n-talk-express-server.herokuapp.com/)
 
 #### Documentation
-* [JSDOC]()
-* [Swagger]()
+* [JSDOC](https://trip-n-talk-express-server.herokuapp.com/docs)
+* [Swagger](https://trip-n-talk-express-server.herokuapp.com/api-docs)
 * [Data Flow](https://www.lucidchart.com/documents/edit/b4adc909-52d2-460a-9a0a-d8cfb7211ec5/0)
 
 #### Modules

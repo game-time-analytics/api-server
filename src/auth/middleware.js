@@ -26,7 +26,7 @@ module.exports = (capability) => {
    * @desc Runs all authentication middleware functions depending on type of authorization, basic or bearer
    */
 
-  const utils = require('../auth/mwModularized/utils');
+  const utils = require('./utils/index');
   return (req, res, next) => {
 
     try {
