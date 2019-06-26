@@ -15,7 +15,7 @@ const morgan = require('morgan');
 // Esoteric Resources
 const errorHandler = require( `${cwd}/src/middleware/500.js`);
 const notFound = require( `${cwd}/src/middleware/404.js` );
-const v1Router = require( `${cwd}/src/api/v1.js` );
+// const v1Router = require( `${cwd}/src/api/v1.js` );
 const authRouter = require(`${cwd}/src/auth/router.js`);
 
 
@@ -36,7 +36,7 @@ expressSwagger(options);
 
 
 // Routes
-app.use(v1Router);
+// app.use(v1Router);
 
 // Auth Routes
 app.use(authRouter);
