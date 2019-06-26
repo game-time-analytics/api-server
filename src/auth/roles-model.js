@@ -8,6 +8,7 @@
 const mongoose = require('mongoose');
 
 /**
+ * Roles Schema for creating roles
  * @method rolesSchema
  * @param {string} role - role
  * @param {array} capabilities - capabilities available to selected role
