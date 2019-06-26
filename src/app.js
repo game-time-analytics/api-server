@@ -43,16 +43,22 @@ app.use(notFound);
 app.use(errorHandler);
 
 /**
- * Export object with app and start method attached
- * @type {Object} export
- * @param {*} port
- * @desc connects to port specified .env file
- */
+* @method start
+* @param {string} port - port from environment file
+* @returns {string} 'Server up on port'
+* @desc Start function to start server
+*/
 
 let start = (port = process.env.PORT) => {
   app.listen(port, () => {
-    console.log(`Server Up on ${port}`);
+    console.log(`Server up on ${port}`);
   });
 };
+
+/**
+* Export object with app and start method attached
+* @type {object} export
+* @desc export object to start server
+*/
 
 module.exports = {app,start};
