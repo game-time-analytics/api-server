@@ -12,12 +12,6 @@ const User = require('./users-model.js');
 const auth = require('./middleware.js');
 const oauth = require('./oauth/google.js');
 
-// Migth be useful for the future
-const cwd = process.cwd();
-const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
-authRouter.param('model', modelFinder);
-
-
 /**
  * post route assign role
  * @route POST /{role}
@@ -25,7 +19,6 @@ authRouter.param('model', modelFinder);
  * @returns {Object} 500 - Server error
  * @returns {Object} 200 - { count: 2, results: [{}, {}]}
  */
-
 
 // To create roles visit this route once
 const capabilities = {
@@ -46,7 +39,6 @@ authRouter.post('/role', (req, res) => {
 
   res.status(200).send('Roles created');
 });
-
 
 /**
  * signup user
@@ -82,7 +74,6 @@ authRouter.get('/signin', auth(), (req, res, next) => {
   res.send(req.token);
 });
 
-
 /**
  * Modifies of records for model provided
  * @route PUT /{model}/{id}
@@ -103,9 +94,6 @@ authRouter.put('/update/:id', auth('update'), handlePut);
  * @returns {Object} 200 - { }
  */
 authRouter.delete('/delete/:id', auth('delete'), handleDelete);
-
-
-
 
 /**
    * @function handlePut
@@ -132,13 +120,6 @@ function handleDelete(req, res, next) {
     .then(() => res.status(200).send('Information deleted'))
     .catch(next);
 }
-  
-
-
-
-
-
-
 
 /**
  * oauth user
