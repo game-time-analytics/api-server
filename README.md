@@ -24,7 +24,7 @@ Tia Rose, Felipe Delatorre, Jeff Lawrence
 ### Setup
 *  `npm i` or `npm install`
 
-#### `.env` requirements - see sample-env or look below
+#### `.env` requirements - see env-sample or look below
 * [Environment Wiki](https://github.com/team-trip-n-talk/ExpressServer/wiki/Environment-setup-requirements)
 
 #### Running the app
