@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * API Server Module
+ * App Module
  * @module src/app
  */
 
@@ -27,7 +27,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
+//Jsdocs and Swagger
 app.use(express.static('docs'));
+app.use('/docs', express.static('docs'));
+
 const options = require('../docs/config/swagger');
 const expressSwagger = require('express-swagger-generator')(app);
 expressSwagger(options);
