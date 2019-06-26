@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * @module src/auth/users-model
+ */
+
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -55,10 +60,10 @@ users.pre('save', function(next) {
 
 
 /**
- * @module createFromOauth()
- * @param {object} googleUser
- * @desc created from the authorized function located in the oauth diretory. Allows google users to sign in with their accounts and then creates that user in the database
- */
+* @method createFromOauth
+* @param {object} googleUser - passed in user info
+* @desc Create From Oauth function takes in a google users info and creates a user
+*/
 users.statics.createFromOauth = function(googleUser) {
 
   if(! googleUser) { return Promise.reject('Validation Error'); }
