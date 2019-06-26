@@ -18,11 +18,22 @@ const SECRET = process.env.SECRET;
 
 const usedTokens = new Set();
 
+// Capablities object containing information for each role
 const capabilities = {
   admin: ['create','read','update','delete', 'superuser'],
   editor: ['create', 'read', 'update'],
   user: ['read'],
 };
+
+/**
+ * Users schema for creating users
+ * @method usersSchema
+ * @param {string} username - username
+ * @param {string} password - password
+ * @param {string} email - email
+ * @param {string} role - role
+ * @desc Handles creating users
+ */
 
 const users = new mongoose.Schema({
   username: {type:String, required:true, unique:true},
@@ -31,12 +42,22 @@ const users = new mongoose.Schema({
   role: {type: String, default:'user', enum: ['admin','editor','user']},
 }, { toObject:{virtuals:true}, toJSON:{virtuals:true}});
 
+/**
+ * @method virtual
+ * @desc Users virtual linking to roles
+ */
+
 users.virtual('acl', {
   ref: 'roles',
   localField: 'role',
   foreignField: 'role',
   justOne: true,
 });
+
+/**
+ * @method pre - findOne
+ * @desc Populating the acl table with users roles
+ */
 
 users.pre('findOne', function() {
   try{
@@ -47,7 +68,10 @@ users.pre('findOne', function() {
   }
 });
 
-
+/**
+ * @method pre - save
+ * @desc Saves the password to the database hashed with bcrypt
+ */
 
 users.pre('save', function(next) {
   bcrypt.hash(this.password, 10)
@@ -58,11 +82,11 @@ users.pre('save', function(next) {
     .catch(error => {throw new Error(error);});
 });
 
-
 /**
 * @method createFromOauth
-* @param {object} googleUser - passed in user info
-* @desc Create From Oauth function takes in a google users info and creates a user
+* @param {object} googleUser - passed in user info from google
+* @returns {object} either logged in user or newly created user
+* @desc Create From Oauth function takes in google user info and either logs in or creates a user
 */
 users.statics.createFromOauth = function(googleUser) {
 
@@ -83,9 +107,11 @@ users.statics.createFromOauth = function(googleUser) {
 };
 
 /**
- * @module authenticateToken()
+ * @method authenticateToken
  * @param {object} token
- * @desc Checks to see if a user has a vaild token
+ * @returns {string} 'Invalid Token'
+ * @returns {string} parsed token id
+ * @desc Checks to see if a user has a valid token
  */
 users.statics.authenticateToken = function(token) {
   
@@ -95,19 +121,17 @@ users.statics.authenticateToken = function(token) {
   
   try {
     let parsedToken = jwt.verify(token, SECRET);
-    console.log('above parse');
-    console.log(parsedToken);
     (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token);
     let query = {_id: parsedToken.id};
     return this.findOne(query);
   } catch(e) { console.log('rejecteds'); throw new Error('Invalid Token'); }
-  
 };
 
 /**
- * @module authenticateBasic()
- * @param {object}
- * @desc checks to see if the credientials the user put in correct and in db
+ * @method authenticateBasic
+ * @param {object} auth
+ * @returns {boolean} valid user or invalid user
+ * @desc checks to see if the credentials the user put in are correct and in database
  */
 
 users.statics.authenticateBasic = function(auth) {
@@ -117,30 +141,10 @@ users.statics.authenticateBasic = function(auth) {
     .catch(error => {throw error;});
 };
 
-
 /**
- * @module authenticateBearer()
- * @param {object}1
- * @desc checks to see if the current token is valid, unique, non-expired token
- */
-
-// users.statics.authenticateBearer = function(token){
-
-//   if(usedTokens.has(token)){
-//     return Promise.reject('Invalid token');
-//   }
-
-//   let parsedToken = jwt.verify(token, process.env.SECRET);
-
-//   SINGLE_USE_TOKENS && parsedToken.type !== 'key' && usedTokens.add(token);
-
-//   let query = {_id: parsedToken.id};
-//   return this.findOne(query);
-// };
-
-/**
- * @module comparePassword()
- * @param {object} password
+ * @method comparePassword
+ * @param {string} password
+ * @returns {boolean} valid password or invalid password
  * @desc Uses the bcrypt module and compares it to the password that was provided to ensure they match
  */
 
@@ -150,9 +154,10 @@ users.methods.comparePassword = function(password) {
 };
 
 /**
- * @module generateToken()
- * @param {object} type
- * @desc generates a token based on that users specified capabilities
+ * @method generateToken
+ * @param {object} type - type of token, key etc.
+ * @returns {string} signed token
+ * @desc generates a token based on that users specified role and capabilities
  */
 
 users.methods.generateToken = function(type) {
@@ -170,23 +175,29 @@ users.methods.generateToken = function(type) {
   return jwt.sign(token, SECRET, options);
 };
 
-
 /**
- * @module annoymous()
- * @param {object} capability
- * @desc checks to see if the capabilities passed through is allowed
+ * @method can
+ * @param {object} capability - users capability
+ * @desc checks to see if the passed in capablity has a certain role
  */
+
 users.methods.can = function(capability) {
   return capabilities[this.role].includes(capability);
 };
 
 /**
- * @module generateKey()
+ * @method generateKey
  * @desc generates a key (a token that doesn't expire)
  */
 
 users.methods.generateKey = function() {
   return this.generateToken('key');
 };
+
+/**
+ * Export object for users schema
+ * @type {Object} export
+ * @desc allows use of users schema and associated functions
+ */
 
 module.exports = mongoose.model('users', users);
