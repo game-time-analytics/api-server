@@ -44,7 +44,7 @@ app.use(errorHandler);
 
 /**
  * Export object with app and start method attached
- * @type {Object}
+ * @type {Object} export
  * @param {*} port
  * @desc connects to port specified .env file
  */

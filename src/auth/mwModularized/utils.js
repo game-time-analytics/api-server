@@ -7,7 +7,7 @@
 
 /**
  * utils export
- * @type {Object}
+ * @type {Object} export
  * @desc exports utils functions
  */
 
@@ -40,6 +40,7 @@ utils._authBearer = function(req, authString, capability, next) {
  */
 
 utils._authBasic = function(req, str, capability, next) {
+  console.log(req.headers);  //to access basic auth string when using postman
   // str: am9objpqb2hubnk=
   let base64Buffer = Buffer.from(str, 'base64'); // <Buffer 01 02 ...>
   let bufferString = base64Buffer.toString();    // john:mysecret

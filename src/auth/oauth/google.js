@@ -51,7 +51,7 @@ const authorize = (req) => {
 
 /**
  * Export object with oauth authorize function attached
- * @type {Object}
+ * @type {Object} export
  * @desc allows use of Google Oauth
  */
 
