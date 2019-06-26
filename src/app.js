@@ -35,7 +35,7 @@ const options = require('../docs/config/swagger');
 const expressSwagger = require('express-swagger-generator')(app);
 expressSwagger(options);
 
-// Auth Routes
+//Routes
 app.use(authRouter);
 
 // Catchalls
@@ -43,10 +43,12 @@ app.use(notFound);
 app.use(errorHandler);
 
 /**
+ * Export object with app and start method attached
  * @type {Object}
  * @param {*} port
  * @desc connects to port specified .env file
  */
+
 let start = (port = process.env.PORT) => {
   app.listen(port, () => {
     console.log(`Server Up on ${port}`);
