@@ -19,7 +19,7 @@ const capabilities = {
   editor: ['create', 'read', 'update'],
   user: ['read'],
 };
-
+/* istanbul ignore next */
 /**
  * Post route to create roles
  * @route POST /{role}
@@ -61,7 +61,7 @@ authRouter.post('/signup', (req, res, next) => {
       req.user = user;
       res.set('token', req.token);
       res.cookie('auth', req.token);
-      res.send(req.token);
+      res.status(200).send(req.token);
     })
     .catch(next);
 });
@@ -148,7 +148,7 @@ authRouter.get('/oauth', (req,res,next) => {
     })
     .catch(next);
 });
-
+/* istanbul ignore next */
 /**
  * Obtain key that is good for unlimited uses
  * @route POST /{key}
@@ -171,4 +171,4 @@ authRouter.post('/key', auth(), (req,res,next) => {
  * @desc exports authrouter
  */
 
-module.exports = authRouter;
+module.exports = authRouter, handleDelete;

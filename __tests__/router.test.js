@@ -27,36 +27,65 @@ describe('api server', () => {
       .then(results => {
         expect(results.status).toBe(404);
       });
-
   });
 
-  it('should be able to post to a valid model', ()  => {
 
-    let obj = {name:'John', bats:'R',throws:'R',position:'C',team:'Bunnies'};
+  it('should be able to post a user', () => {
+
+    let obj = {username: 'adam', password:'adam', email:'adam@adam.com', role: 'admin'};
 
     return mockRequest
-      .post('/api/v1/players')
+      .post('/signup')
+      .set('content-type', 'application/json')
       .send(obj)
       .then(results => {
         expect(results.status).toBe(500);
       });
   });
 
+  it('should be able to signin', () => {
 
-  it('following a post to a valid model, should find a single record', () => {
-
-    let obj = {name:'John', bats:'R',throws:'R',position:'C',team:'Bunnies'};
+    let obj = {authorization: 'Basic dGlhOnRpYQ=='};
 
     return mockRequest
-      .post('/api/v1/players')
-      .send(obj)
+      .get('/signin')
+      .set('Authorization', 'Basic dGlhOnRpYQ==')
       .then(results => {
-        return mockRequest.get(`/api/v1/players/${results.body._id}`)
-          .then(list => {
-            expect(list.status).toBe(500);
-          });
+        expect(results.status).toBe(500);
       });
 
   });
 
+  it('should go to the homepage', () => {
+    return mockRequest
+    .get('/')
+    .then(results => {
+      expect(results.status).toBe(200);
+    });
+  })
+
+  it('should be able to post to a valid model via google oauth', ()  => {
+
+    let obj = {username: 'adam', password:'adam', email:'adam@adam.com', role: 'admin'};
+
+    return mockRequest
+      .get('/oauth')
+      .send(obj)
+      .then(results => {
+        expect(results.status).toBe(200);
+      });
+  });
+
+  it('should be able to post in order to get a key', () => {
+
+    let obj = {username: 'adam', password:'adam', email:'adam@adam.com', role: 'admin'};
+
+    return mockRequest
+      .post('/key')
+      .set('content-type', 'application/json')
+      .send(obj)
+      .then(results => {
+        expect(results.status).toBe(500);
+      });
+  });
 });
