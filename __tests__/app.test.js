@@ -20,7 +20,7 @@ describe('api server', () => {
 
   });
 
-  it('should respond with a 404 on an invalid method', () => {
+  it('should return 404 since page does not exist', () => {
 
     return mockRequest
       .post('/api/v1/players/12')
@@ -30,7 +30,7 @@ describe('api server', () => {
 
   });
 
-  it('should be able to post to a valid model', ()  => {
+  it('should return 404 since page does not exist', ()  => {
 
     let obj = {name:'John', bats:'R',throws:'R',position:'C',team:'Bunnies'};
 
@@ -38,7 +38,7 @@ describe('api server', () => {
       .post('/api/v1/players')
       .send(obj)
       .then(results => {
-        expect(results.status).toBe(500);
+        expect(results.status).toBe(404);
       });
   });
 
@@ -53,7 +53,7 @@ describe('api server', () => {
       .then(results => {
         return mockRequest.get(`/api/v1/players/${results.body._id}`)
           .then(list => {
-            expect(list.status).toBe(500);
+            expect(list.status).toBe(404);
           });
       });
 
