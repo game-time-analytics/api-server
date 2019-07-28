@@ -40,6 +40,7 @@ router.get('/api/v1/:model', handleGetAll);
  * @returns {Object} 200 - creates new entry for specified model
  */
 
+console.log('in v1.js');
 router.post('/api/v1/:model', handlePost);
 
 /**
