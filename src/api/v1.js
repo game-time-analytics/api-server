@@ -89,7 +89,7 @@ router.patch('/api/v1/:model/:id',auth('update'), handlePut);
  * @returns {Object} 200 - If successful returns nothing
  */
 
-router.delete('/api/v1/:model/:id',auth('delete'), handleDelete);
+router.delete('/api/v1/:model/:id', handleDelete);
 
 // Route Handlers
 
