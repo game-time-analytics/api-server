@@ -40,6 +40,7 @@ router.get('/api/v1/:model', handleGetAll);
  * @returns {Object} 200 - creates new entry for specified model
  */
 
+// router.post('/api/v1/:model', auth('create'), handlePost);
 router.post('/api/v1/:model', handlePost);
 
 /**
@@ -89,6 +90,7 @@ router.patch('/api/v1/:model/:id',auth('update'), handlePut);
  * @returns {Object} 200 - If successful returns nothing
  */
 
+// router.delete('/api/v1/:model/:id',auth('delete'), handleDelete);
 router.delete('/api/v1/:model/:id', handleDelete);
 
 // Route Handlers
