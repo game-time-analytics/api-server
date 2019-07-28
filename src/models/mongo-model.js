@@ -40,7 +40,6 @@ class Model {
 
   //  console.log('outside post request');
   post(record) {
-    console.log('inside post request');
     let newRecord = new this.schema(record);
     return newRecord.save();
   }
@@ -63,6 +62,7 @@ class Model {
    */
 
   delete(_id) {
+    console.log('in delete');
     return this.schema.findByIdAndDelete(_id);
   }
 

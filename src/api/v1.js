@@ -40,7 +40,6 @@ router.get('/api/v1/:model', handleGetAll);
  * @returns {Object} 200 - creates new entry for specified model
  */
 
-console.log('in v1.js');
 router.post('/api/v1/:model', handlePost);
 
 /**
@@ -103,6 +102,7 @@ router.delete('/api/v1/:model/:id',auth('delete'), handleDelete);
    */
 
 function handleGetAll(request,response,next) {
+  console.log('in handle get all function');
   request.model.get()
     .then( data => {
       const output = {
@@ -137,6 +137,7 @@ function handleGetOne(request,response,next) {
    */
 
 function handlePost(request,response,next) {
+  console.log('in handle post function');
   request.model.post(request.body)
     .then( result => response.status(200).json(result) )
     .catch( next );
@@ -165,6 +166,7 @@ function handlePut(request,response,next) {
    */
 
 function handleDelete(request,response,next) {
+  console.log('in handle delete function');
   request.model.delete(request.params.id)
     .then( result => response.status(200).json(result) )
     .catch( next );
