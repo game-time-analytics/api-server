@@ -10,7 +10,8 @@ const cwd = process.cwd();
 
 const express = require('express');
 
-const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
+console.log('in v1.js');
+const modelFinder = require('../../middleware/model-finder');
 const auth = require(`${cwd}/src/auth/middleware.js`);
 
 const router = express.Router();
@@ -27,6 +28,7 @@ router.param('model', modelFinder);
  * @returns {Object} 200 - returns all of specified model
  */
 
+console.log('in get request');
 router.get('/api/v1/:model', handleGetAll);
 
 /**
