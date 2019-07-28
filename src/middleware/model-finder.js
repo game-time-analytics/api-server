@@ -12,7 +12,6 @@
    */
   
 module.exports = (req,res,next) => {
-  console.log('In model finder');
   let modelName = req.params.model.replace(/[^a-z0-9-_]/gi, '');
   req.model = require(`../models/${modelName}/${modelName}-model.js`);
   next();

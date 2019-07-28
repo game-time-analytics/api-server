@@ -38,7 +38,9 @@ class Model {
    * @desc Add an item to the database
    */
 
+  //  console.log('outside post request');
   post(record) {
+    console.log('inside post request');
     let newRecord = new this.schema(record);
     return newRecord.save();
   }
