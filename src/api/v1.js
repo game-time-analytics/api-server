@@ -40,8 +40,7 @@ router.get('/api/v1/:model', handleGetAll);
  * @returns {Object} 200 - creates new entry for specified model
  */
 
-// router.post('/api/v1/:model', auth('create'), handlePost);
-router.post('/api/v1/:model', handlePost);
+router.post('/api/v1/:model', auth('create'), handlePost);
 
 /**
  * Get a list of records for model id provided
