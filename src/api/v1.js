@@ -21,7 +21,7 @@ router.param('model', modelFinder);
 
 /**
  * Get a list of records for model provided
- * @route GET /{model}
+ * @route GET /{players}
  * @param {string} model.path.required - Resource model name
  * @returns {Object} 500 - Server error
  * @returns {Object} 200 - returns all of specified model
@@ -33,7 +33,7 @@ router.get('/api/v1/:model', handleGetAll);
 /**
  * Creates a new entry for model provided
  * Require create capability
- * @route POST /{model}
+ * @route POST /{players}
  * @param {string} model.path.required - Resource model name
  * @consumes application/json application/xml
  * @returns {Object} 500 - Server error
@@ -44,7 +44,7 @@ router.post('/api/v1/:model', auth('create'), handlePost);
 
 /**
  * Get a list of records for model id provided
- * @route GET /{model}/{id}
+ * @route GET /{players}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @returns {Object} 500 - Server error
@@ -56,7 +56,7 @@ router.get('/api/v1/:model/:id', handleGetOne);
 /**
  * Updates records for model id provided
  * Requires update capability
- * @route PUT /{model}/{id}
+ * @route PUT /{players}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @consumes application/json application/xml
@@ -69,7 +69,7 @@ router.put('/api/v1/:model/:id',auth('update'), handlePut);
 /**
  * Updates records for model id provided
  * Requires update capability
- * @route PATCH /{model}/{id}
+ * @route PATCH /{players}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @consumes application/json application/xml
@@ -82,7 +82,7 @@ router.patch('/api/v1/:model/:id',auth('update'), handlePut);
 /**
  * Deletes records for model id provided
  * Requires delete capability
- * @route DELETE /{model}/{id}
+ * @route DELETE /{players}/{id}
  * @param {string} model.path.required - Resource model name
  * @param {number} id.path.required - Resource model name
  * @returns {Object} 500 - Server error
@@ -95,12 +95,12 @@ router.delete('/api/v1/:model/:id', handleDelete);
 // Route Handlers
 
 /**
-   * @function handleGetAll
-   * @param {object} request - request object
-   * @param {object} response - response object
-   * @param {function} next - calls next middleware
-   * @desc Middleware that handles get all route call
-   */
+  * @function handleGetAll
+  * @param {object} request - request object
+  * @param {object} response - response object
+  * @param {function} next - calls next middleware
+  * @desc Middleware that handles get all route call
+  */
 
 function handleGetAll(request,response,next) {
   console.log('in handle get all function');

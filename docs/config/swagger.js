@@ -20,5 +20,5 @@ module.exports = {
     },
   },
   basedir: __dirname,
-  files: ['../../src/auth/router.js'],
+  files: ['../../src/auth/router.js','../../src/api/v1.js'],
 };
