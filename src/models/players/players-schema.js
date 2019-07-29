@@ -5,6 +5,7 @@ require('mongoose-schema-jsonschema')(mongoose);
 
 const players = mongoose.Schema({
   name: { type:String, required:true },
+  passing: { type:Number, required:true},
   touchdowns: { type:Number, required:true},
   interceptions: { type:Number, required:true},
   team: {type:String, required:true},
