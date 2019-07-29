@@ -57,6 +57,7 @@ authRouter.post('/signup', (req, res, next) => {
   let user = new User(req.body);
   user.save()
     .then( (user) => {
+      console.log('signing up');
       req.token = user.generateToken();
       req.user = user;
       res.set('token', req.token);
@@ -66,7 +67,7 @@ authRouter.post('/signup', (req, res, next) => {
     .catch(next);
 });
 
-/**
+/** 
  * Get route to signin a user
  * @route GET /{signin}
  * @consumes application/json application/xml
