@@ -39,7 +39,7 @@ describe('api server', () => {
       .set('content-type', 'application/json')
       .send(obj)
       .then(results => {
-        expect(results.status).toBe(500);
+        expect(results.status).toBe(200);
       });
   });
 
@@ -58,11 +58,11 @@ describe('api server', () => {
 
   it('should go to the homepage', () => {
     return mockRequest
-    .get('/')
-    .then(results => {
-      expect(results.status).toBe(200);
-    });
-  })
+      .get('/')
+      .then(results => {
+        expect(results.status).toBe(200);
+      });
+  });
 
   it('should be able to post to a valid model via google oauth', ()  => {
 
