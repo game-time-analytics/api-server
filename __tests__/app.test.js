@@ -30,30 +30,25 @@ describe('api server', () => {
 
   });
 
-  it('should return 404 since page does not exist', ()  => {
-
-    let obj = {name:'John', bats:'R',throws:'R',position:'C',team:'Bunnies'};
-
-    return mockRequest
-      .post('/api/v1/players')
-      .send(obj)
-      .then(results => {
-        expect(results.status).toBe(404);
-      });
-  });
-
 
   it('following a post to a valid model, should find a single record', () => {
 
-    let obj = {name:'John', bats:'R',throws:'R',position:'C',team:'Bunnies'};
+    let obj = {
+      'name': 'Patrick Mahomes',
+      'passing': 5097,
+      'touchdowns': 50,
+      'interceptions': 12,
+      'team': 'Kansas City Chiefs',
+      'image': 'https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3139477.png&w=350&h=254',
+    };
 
     return mockRequest
       .post('/api/v1/players')
       .send(obj)
       .then(results => {
-        return mockRequest.get(`/api/v1/players/${results.body._id}`)
+        return mockRequest.get('/api/v1/players')
           .then(list => {
-            expect(list.status).toBe(404);
+            expect(list.status).toBe(200);
           });
       });
 
