@@ -9,6 +9,7 @@ const players = mongoose.Schema({
   touchdowns: { type:Number, required:true},
   interceptions: { type:Number, required:true},
   team: {type:String, required:true},
+  image: { type:String, required:true },
 });
 
 module.exports = mongoose.model('players', players);
