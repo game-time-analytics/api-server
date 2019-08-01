@@ -23,6 +23,7 @@ Jeff Lawrence, Matt Wilkin, Tia Rose
 
 ### Setup
 *  `npm i` or `npm install`
+* [Dependencies Wiki](https://github.com/game-time-analytics/api-server/wiki/Dependencies)
 
 #### `.env` requirements - see env-sample or look below
 * [Environment Wiki](https://github.com/game-time-analytics/api-server/wiki/Environment-setup-requirements)
