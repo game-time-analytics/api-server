@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: auth/router.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: auth/router.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * Router Module
+ * @module src/auth/router
+ */
+
+// Dependencies
+const express = require('express');
+const authRouter = express.Router();
+const Role = require('./roles-model.js');
+const User = require('./users-model.js');
+const auth = require('./middleware.js');
+const oauth = require('./oauth/google.js');
+
+// Capablities object containing information for each role
+const capabilities = {
+  admin: ['create', 'read', 'update', 'delete', 'superuser'],
+  editor: ['create', 'read', 'update'],
+  user: ['read'],
+};
+/* istanbul ignore next */
+/**
+ * Post route to create roles
+ * @route POST /{role}
+ * @consumes application/json application/xml
+ * @param {Object} req - request
+ * @param {Object} res - response
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - 'Roles created'
+ */
+
+// To create roles visit this route once
+authRouter.post('/role', (req, res) => {
+
+  let saves = [];
+  Object.keys(capabilities).map(role => {
+    let newRecord = new Role({role, capabilities: capabilities[role]});
+    saves.push(newRecord.save());
+  });
+  Promise.all(saves);
+  res.status(200).send('Roles created');
+});
+
+/**
+ * Post route to signup a user
+ * @route POST /{signup}
+ * @consumes application/json application/xml
+ * @param {Object} req - request
+ * @param {Object} res - response
+ * @param {Function} next - next function which calls next middleware
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - A token containing all user information
+ */
+
+authRouter.post('/signup', (req, res, next) => {
+  let user = new User(req.body);
+  user.save()
+    .then( (user) => {
+      req.token = user.generateToken();
+      req.user = user;
+      res.set('token', req.token);
+      res.cookie('auth', req.token);
+      res.status(200).send(req.token);
+    })
+    .catch(next);
+});
+
+/**
+ * Get route to signin a user
+ * @route GET /{signin}
+ * @consumes application/json application/xml
+ * @param {Object} req - request
+ * @param {Object} res - response
+ * @param {function} next - next function which calls next middleware
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - A token containing all user information
+ */
+authRouter.get('/signin', auth(), (req, res, next) => {
+  res.cookie('auth', req.token);
+  res.send(req.token);
+});
+
+/**
+ * Put route that updates records for user
+ * @route PUT /{update}/{id}
+ * @param {Number} id.path.required - id of user to be updated
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - 'Information updated'
+ */
+authRouter.put('/update/:id', auth('update'), handlePut);
+
+/**
+ * Function that updates records for user
+ * @function handlePut
+ * @param {object} req - request object
+ * @param {object} res - response object
+ * @param {function} next - next function which calls next middleware
+ * @returns {string} 200 - 'Information updated'
+ * @desc Middleware that handles put route to update user information
+ */
+  
+function handlePut(req, res, next) {
+  User.findByIdAndUpdate(req.params.id, req.body, {new:true})
+    .then(() => res.status(200).send('Information updated'))
+    .catch(next);
+}
+
+/**
+ * Delete route that deletes records for user id provided
+ * @route DELETE /{delete}/{id}
+ * @param {Number} id.path.required - user id
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - 'Information deleted'
+ */
+authRouter.delete('/delete/:id', auth('delete'), handleDelete);
+  
+/**
+ * @function handleDelete
+ * @param {object} request - request object
+ * @param {object} response - response object
+ * @param {function} next - next function which calls next middleware
+ * @returns {string} 200 - 'Information deleted'
+ * @desc Middleware that handles delete route to delete a user
+ */
+
+function handleDelete(req, res, next) {
+  User.findByIdAndDelete(req.params.id)
+    .then(() => res.status(200).send('Information deleted'))
+    .catch(next);
+}
+
+/**
+ * Get route to use google oauth
+ * @route GET /{oauth}
+ * @consumes application/json application/xml
+ * @param {Object} req - request
+ * @param {Object} res - response
+ * @param {function} next - next function which calls next middleware
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - token containing google user information
+*/
+
+authRouter.get('/oauth', (req,res,next) => {
+  oauth.authorize(req)
+    .then( token => {
+      res.status(200).send(token);
+    })
+    .catch(next);
+});
+/* istanbul ignore next */
+/**
+ * Obtain key that is good for unlimited uses
+ * @route POST /{key}
+ * @consumes application/json application/xml
+ * @param {Object} req - request
+ * @param {Object} res - response
+ * @param {Function} next - next function which calls next middleware
+ * @returns {Object} 500 - Server error
+ * @returns {String} 200 - Key represented as a token
+ */
+
+authRouter.post('/key', auth(), (req,res,next) => {
+  let key = req.user.generateKey();
+  res.status(200).send(key);
+});
+
+/**
+ * Export object with authrouter
+ * @type {Object}
+ * @desc exports authrouter
+ */
+
+module.exports = authRouter, handleDelete;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-src_api_v1.html">src/api/v1</a></li><li><a href="module-src_app.html">src/app</a></li><li><a href="module-src_auth_middleware.html">src/auth/middleware</a></li><li><a href="module-src_auth_oauth_google.html">src/auth/oauth/google</a></li><li><a href="module-src_auth_roles-model.html">src/auth/roles-model</a></li><li><a href="module-src_auth_router.html">src/auth/router</a></li><li><a href="module-src_auth_users-model.html">src/auth/users-model</a></li><li><a href="module-src_auth_utils_index.html">src/auth/utils/index</a></li><li><a href="module-src_middleware_404.html">src/middleware/404</a></li><li><a href="module-src_middleware_500.html">src/middleware/500</a></li><li><a href="module-src_middleware_model-finder.html">src/middleware/model-finder</a></li><li><a href="module-src_models_mongo-model.html">src/models/mongo-model</a></li><li><a href="module-src_models_players_players-model.html">src/models/players/players-model</a></li></ul><h3>Classes</h3><ul><li><a href="module-src_models_mongo-model-Mongo%2520Model.html">Mongo Model</a></li><li><a href="module-src_models_players_players-model-Players%2520Model.html">Players Model</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Jul 29 2019 11:42:12 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

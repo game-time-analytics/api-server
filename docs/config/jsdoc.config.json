@@ -1,0 +1,17 @@
+{
+  "source": {
+    "exclude": ["./node_modules"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknowTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "opts": {
+    "destination": "./docs/",
+    "recurse": true,
+    "readme": "./README.md"
+  }
+}

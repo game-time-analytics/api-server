@@ -1,0 +1,8 @@
+PORT=3000
+SECRET=makeyourown
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+API_URL=https://trip-n-talk-express-server.herokuapp.com/
+SINGLE_USE_TOKEN=true
+TOKEN_LIFETIME=15m
+MONGODB_URI=mongodb://localhost:27017/dbname

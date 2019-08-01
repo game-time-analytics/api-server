@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: auth/users-model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: auth/users-model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * @module src/auth/users-model
+ */
+
+
+require('dotenv').config();
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+require('./roles-model.js');
+
+const SINGLE_USE_TOKENS = !!process.env.SINGLE_USE_TOKENS;
+const TOKEN_EXPIRE = process.env.TOKEN_LIFETIME;
+const SECRET = process.env.SECRET;
+
+const usedTokens = new Set();
+
+// Capablities object containing information for each role
+const capabilities = {
+  admin: ['create','read','update','delete', 'superuser'],
+  editor: ['create', 'read', 'update'],
+  user: ['read'],
+};
+
+/**
+ * Users schema for creating users
+ * @method usersSchema
+ * @param {string} username - username
+ * @param {string} password - password
+ * @param {string} email - email
+ * @param {string} role - role
+ * @desc Handles creating users
+ */
+
+const users = new mongoose.Schema({
+  username: {type:String, required:true, unique:true},
+  password: {type:String, required:true},
+  email: {type: String},
+  role: {type: String, default:'user', enum: ['admin','editor','user']},
+}, { toObject:{virtuals:true}, toJSON:{virtuals:true}});
+
+/**
+ * @method virtual
+ * @desc Users virtual linking to roles
+ */
+
+users.virtual('acl', {
+  ref: 'roles',
+  localField: 'role',
+  foreignField: 'role',
+  justOne: true,
+});
+
+/**
+ * @method pre - findOne
+ * @desc Populating the acl table with users roles
+ */
+
+users.pre('findOne', function() {
+  try{
+    this.populate('acl');
+  }
+  catch(e) {
+    console.error('error', e);
+  }
+});
+
+/**
+ * @method pre - save
+ * @desc Saves the password to the database hashed with bcrypt
+ */
+
+users.pre('save', function(next) {
+  bcrypt.hash(this.password, 10)
+    .then(hashedPassword => {
+      this.password = hashedPassword;
+      next();
+    })
+    .catch(error => {throw new Error(error);});
+});
+
+/**
+* @method createFromOauth
+* @param {object} googleUser - passed in user info from google
+* @returns {object} either logged in user or newly created user
+* @desc Create From Oauth function takes in google user info and either logs in or creates a user
+*/
+users.statics.createFromOauth = function(googleUser) {
+
+  if(! googleUser) { return Promise.reject('Validation Error'); }
+  let email = googleUser.email;
+  return this.findOne( {email} )
+    .then(user => {
+      if( !user ) { throw new Error('User Not Found'); }
+      return user;
+    })
+    .catch( error => {
+      let username = email;
+      let password = 'none';
+      let role = 'user';
+      return this.create({username, password, email, role});
+    });
+
+};
+
+/**
+ * @method authenticateToken
+ * @param {object} token
+ * @returns {string} 'Invalid Token'
+ * @returns {string} parsed token id
+ * @desc Checks to see if a user has a valid token
+ */
+users.statics.authenticateToken = function(token) {
+  
+  if ( usedTokens.has(token ) ) {
+    return Promise.reject('Invalid Token');
+  }
+  
+  try {
+    let parsedToken = jwt.verify(token, SECRET);
+    (SINGLE_USE_TOKENS) &amp;&amp; parsedToken.type !== 'key' &amp;&amp; usedTokens.add(token);
+    let query = {_id: parsedToken.id};
+    return this.findOne(query);
+  } catch(e) { console.log('rejecteds'); throw new Error('Invalid Token'); }
+};
+
+/**
+ * @method authenticateBasic
+ * @param {object} auth
+ * @returns {boolean} valid user or invalid user
+ * @desc checks to see if the credentials the user put in are correct and in database
+ */
+
+users.statics.authenticateBasic = function(auth) {
+  let query = {username:auth.username};
+  return this.findOne(query)
+    .then( user => user &amp;&amp; user.comparePassword(auth.password) )
+    .catch(error => {throw error;});
+};
+
+/**
+ * @method comparePassword
+ * @param {string} password
+ * @returns {boolean} valid password or invalid password
+ * @desc Uses the bcrypt module and compares it to the password that was provided to ensure they match
+ */
+
+users.methods.comparePassword = function(password) {
+  return bcrypt.compare( password, this.password )
+    .then( valid => valid ? this : null);
+};
+
+/**
+ * @method generateToken
+ * @param {object} type - type of token, key etc.
+ * @returns {string} signed token
+ * @desc generates a token based on that users specified role and capabilities
+ */
+
+users.methods.generateToken = function(type) {
+  let token = {
+    username: this.username,
+    id: this._id,
+    capabilities: capabilities[this.role],
+    type: type || this.role || 'user',
+  };
+  let options = {};
+  if ( type !== 'key' &amp;&amp; !! TOKEN_EXPIRE ) { 
+    options = { expiresIn: TOKEN_EXPIRE };
+  }
+  console.log(token.username);
+  return jwt.sign(token, SECRET, options);
+};
+
+/**
+ * @method can
+ * @param {object} capability - users capability
+ * @desc checks to see if the passed in capablity has a certain role
+ */
+
+users.methods.can = function(capability) {
+  return capabilities[this.role].includes(capability);
+};
+
+/**
+ * @method generateKey
+ * @desc generates a key (a token that doesn't expire)
+ */
+
+users.methods.generateKey = function() {
+  return this.generateToken('key');
+};
+
+/**
+ * Export object for users schema
+ * @type {Object}
+ * @desc allows use of users schema and associated functions
+ */
+
+module.exports = mongoose.model('users', users);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-src_api_v1.html">src/api/v1</a></li><li><a href="module-src_app.html">src/app</a></li><li><a href="module-src_auth_middleware.html">src/auth/middleware</a></li><li><a href="module-src_auth_oauth_google.html">src/auth/oauth/google</a></li><li><a href="module-src_auth_roles-model.html">src/auth/roles-model</a></li><li><a href="module-src_auth_router.html">src/auth/router</a></li><li><a href="module-src_auth_users-model.html">src/auth/users-model</a></li><li><a href="module-src_auth_utils_index.html">src/auth/utils/index</a></li><li><a href="module-src_middleware_404.html">src/middleware/404</a></li><li><a href="module-src_middleware_500.html">src/middleware/500</a></li><li><a href="module-src_middleware_model-finder.html">src/middleware/model-finder</a></li><li><a href="module-src_models_mongo-model.html">src/models/mongo-model</a></li><li><a href="module-src_models_players_players-model.html">src/models/players/players-model</a></li></ul><h3>Classes</h3><ul><li><a href="module-src_models_mongo-model-Mongo%2520Model.html">Mongo Model</a></li><li><a href="module-src_models_players_players-model-Players%2520Model.html">Players Model</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Jul 29 2019 11:42:12 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
