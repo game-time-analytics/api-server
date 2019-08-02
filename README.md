@@ -36,5 +36,3 @@ Jeff Lawrence, Matt Wilkin, Tia Rose
 
 ### Group Agreement
 * [Group Agreement](https://github.com/game-time-analytics/api-server/wiki/Group-Agreement)
-
-
