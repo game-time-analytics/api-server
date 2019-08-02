@@ -114,17 +114,22 @@ users.statics.createFromOauth = function(googleUser) {
  * @desc Checks to see if a user has a valid token
  */
 users.statics.authenticateToken = function(token) {
-  
+  console.log(token);
   if ( usedTokens.has(token ) ) {
     return Promise.reject('Invalid Token');
   }
   
   try {
+    console.log(SECRET);
+    console.log(SINGLE_USE_TOKENS);
     let parsedToken = jwt.verify(token, SECRET);
+    console.log(parsedToken);
+    console.log(usedTokens);
     (SINGLE_USE_TOKENS) && parsedToken.type !== 'key' && usedTokens.add(token);
     let query = {_id: parsedToken.id};
+    console.log(query);
     return this.findOne(query);
-  } catch(e) { console.log('rejecteds'); throw new Error('Invalid Token'); }
+  } catch(e) { console.error(e); throw new Error('Invalid Token'); }
 };
 
 /**
